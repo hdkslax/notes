@@ -112,11 +112,11 @@
 * To understand the methods for multimedia **representation** and **compression**
 
   * *Representation* (audio/video)
-    * Digitization - input signal is analog, eg, audio from microphone, video from CCD
-    * Quantization 量子化 - make the analog discrete numbers. The process is also called sampling. The data captured by this method can be quite big, eg, raw image. 
+    * Digitization - input signal is analog, eg, audio from microphone, video from CCD, quantities them, make them discrete numbers, this process is called digitization, also involve sampling. (the data captured by this method is quite big., eg. raw image).
+    * Quantization 量子化 - make the analog discrete numbers. The process is also called sampling. The data captured by this method can be quite big, eg, raw image - it contains all the information. 
   * *Compression* (audio/video)
     * Transform - initial sample of each pixel of an image or video, if manipulate directly on these pixels, it would be difficult. So you need to transform them into frequency domain (频率范围，频域). For sound, you have time domain samples, so that the sound contains different frequencies, and these frequencies are easier to manipulate, and later compress.
-    * Entropy Coding (平均信息量代码) - The representative of information in term of bits. Based on this, we know that how much information is redundant in original data representation, and how much information is necessary to recapture. 
+    * Entropy Coding (平均信息量代码) - The representative of information in term of bits. Based on this, we know that how much information is redundant in original data representation, and how much information is necessary to be captured. (e.g. arithmetic coding)
     * Coding Standards - mp3, JEPG, mp4
 
 * To study the issues in multimedia **communications**
@@ -124,14 +124,19 @@
   * QoS Requirements
     *  QoS (Quality of Service) is measure by delay, by bandwidth, by loss rate, etc.
   * Network Protocols
-    * TCP, UDP, IP, RTP ...
+    * TCP
+    * UDP
+    * IP - lower layer
+    * RTP - high layer 
+    * ...
   * Streaming Media
+    * downloading & playing at the same time
 
 * Multimedia database
 
   * Organization
   * Retrieval - multimedia retrieval
-    * based on tag, eg, Google search
+    * based on tag. eg, Google search
     * Machine Learning, e.g. search pictures
 
 * To help you survive a job interview in multimedia
