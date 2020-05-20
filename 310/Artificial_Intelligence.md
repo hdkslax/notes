@@ -37,6 +37,20 @@ but such details aside (除了这些细节), it is interesting to think about th
 
 all of these are significant and challenging parts of AI research today, and the general consensus (共识) is that we are nowhere near being able to make a program that could pass [the Turing Test](https://en.wikipedia.org/wiki/Turing_test) (我们离开发能够通过Turing Test的程序还差得远)
 
+The computers need to possess the following capabilities to pass a rigorously applied test:
+
+* **natural language processing** - to enable it to communicate successfully in natural language, like English. 
+* **knowledge representation** - to store what it knows or hears.
+* **automated reasoning** - to used the stored information to answer questions and to draw new conclusions.
+* **machine learning** - to adapt to new circumstances and to detect and extrapolate(推断) patterns. 
+
+**Total Turing Test** includes a video signal so that the questioner can test the subject's perceptual abilities. 
+
+To pass total Turing Test, the computers will need:
+
+* **computer vision** - to perceive objects
+* **robotics** - to manipulate objects and move.
+
 in practice, [the Turing Test](https://en.wikipedia.org/wiki/Turing_test) has had little direct impact on AI research, since it is too complex, and researchers have preferred to focus on the underlying principles of AI
 
 yet you will often hear mention of [the Turing Test](https://en.wikipedia.org/wiki/Turing_test) in movies, books, and the popular press; it is certainly useful for inspiring people, but it has not been a direct topic of much AI research — it’s just too much to ask (yet!)
@@ -113,14 +127,14 @@ we can’t cover all these areas of influence, and so we will focus on the areas
 | 1956           | Dartmouth 2-month summer workshop, where many of the early pioneers of AI met; their ideas approaches came to dominate AI for decades afterwards |
 | 1958           | **John McCarthy** developed the LISP programming language (used in many early symbolic AI programs), to help implement AI-related programs that needed to do symbolic processing (which was very difficult to do in other languages of the day). He involved in much foundational AI research, in particular applications of logic. |
 | 1960s          | some success in *microworlds*, i.e. problem-solving in carefully limited domains |
-| 1965 - onwards | Edward Feigenbaum helped create the influential expert system Dendral (for identifying unknown organic molecules), and other expert systems. |
-|                | Edward Feigenbaum proponent of heuristics and rule-based AI  |
+| 1965 - onwards | **Edward Feigenbaum** helped create the influential expert system Dendral (for identifying unknown organic molecules), and other expert systems. |
+|                | **Edward Feigenbaum** proponent of heuristics and rule-based AI |
 | 1966-1973      | (“a dose of reality”) initial optimism about the pace of AI decreased, when, for example, the intractability of many of the problems they were trying to solve was understood (thanks to computer science!); many early AI programs were doing simple syntactic manipulations, and clearly had no real understanding of their domains |
 | **1969**       | **Marvin Minsky** and **Seymour Papert** published the book *Perceptrons* that showed fundamental limitations of early neural nets, and they famously proved that the simple neural-network learning algorithms that were popular at the time were not powerful enough to learn many extremely simple functions |
 | 1969           | **Marvin Minsky** along with John McCarthy, one of the major leaders of early AI work. |
 | 1970s          | (“knowledge-based systems”): many interesting approaches to storing and processing “knowledge” were explored, including expert systems (which were once thought to be the crowning success of AI) |
-| 1978-onwards   | Geoffrey Hinton, one of a small group of enthusiastic neural net researchers. Involved in a lot of fundamental modern work on neural nets. |
-| 1980s          | Edward Feigenbaum expert-system shells for adding rule-based AI to programs were available. |
+| 1978-onwards   | **Geoffrey Hinton**, one of a small group of enthusiastic neural net researchers. Involved in a lot of fundamental modern work on neural nets. |
+| 1980s          | **Edward Feigenbaum** expert-system shells for adding rule-based AI to programs were available. |
 | 1986 onwards   | neural networks regained popularity thanks to new, and better, methods for learning with them; work has progressed since this time until now, where so-called “deep neural nets” are considered by many to be the pinnacle of AI achievement, able to solve useful hard problems like image recognition |
 | 2000 onwards   | large data sets started to become available (thanks to the computerization of most data, including the web), and so this inspired a lot more interest in machine-learning techniques |
 | 2011 - onwards | major success with neural net model, achieving best performance in applications such as image recognition and speech understanding. |
@@ -145,7 +159,7 @@ IF: 1) The therapy under consideration is one of: cephalothin clindamycin erythr
 THEN: It is definite (1) the therapy under consideration is not a potential therapy for use against the organism. 
 ```
 
-```
+```algorithm
 RULE060
 IF: The identity of the organism is bacteroides
 THEN: I recommend therapy chosen from among the following frugs:
@@ -160,8 +174,17 @@ THEN: I recommend therapy chosen from among the following frugs:
 
 #### Video
 
-<video><source src="https://youtu.be/18SXA-G2peY" type="video/mp4"></source></video>
+<iframe src="//www.youtube.com/embed/18SXA-G2peY" width="560" height="314" allowfullscreen="allowfullscreen"></iframe>
 
+* The name of the philosopher talking in the video, and the person who created the Chinese Room argument, is **John Searle**.
+* **Weak AI** is the view that a program could simulate a human mind, but the program itself wouldn't actually be a mind (just a simulation one).
+* **Strong AI** is the view that a program that simulates a (human) mind is literally a mind. 
+* The Chinese Room thought experiment is an argument that claims the strong AI point of view is incorrect.
+* In the Chinese Room though experiment, the non-Chinese speaking person inside the room is the CPU. 
+* In the Chinese Room thought experiment, the rule-book inside the room is the program, and the boxes with tags is database. 
+* According to Searle, it's possible for a human to pass the Turing Test using Chinese as the language of conversation without the human understanding any Chinese. 
+* According to Searle, the essential difference between a mind and a computer is that computers can only manipulate symbols, but lack meaning. Minds can manipulate symbols, but they can also deal with meaning.
+* According to the speaker in the video, why is "mental content", i.e. meaning, not possible on a computer? He doesn't say, he simply asserts that it can't.
 * The "strong AI" and "weak AI" he used is created by him, no other people using them. 
 * He doesn't distinguish between hardware and software. But CS people know that anything is a software could just be easily to put into a hardware, verse vice. 
 * You can simulate a mind just like you can simulate water in a video game. But it never actually been a mind.

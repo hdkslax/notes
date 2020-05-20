@@ -358,3 +358,389 @@ To the computer science researcher, multimedia consists of a wide variety of top
 
 <img src="img/1.14.png" />
 
+## Multimedia Representation
+
+Representation -> Digitization for computers
+
+### Audio Digitization (PCM)
+
+<img src="img/1.15.png" />
+
+### Digital Media
+
+* What do you mean by **digitized**?
+  * Audio/visual signals from the natural world is Analog
+    * continuous in time and space
+    * conventional storage/playback: LP (audio record), tape, CRT TV (old TV), film
+    * can't be handled by computer
+  * A/D conversion
+    * to 1/0 discrete signals
+* Why **digitized**?
+  * Bulky storage 大容量储存(space, cost, lifetime)
+  * poor quality
+  * poor/no compression
+  * poor portability/mobility/editibility
+    * MP3 player, iPod, YouTube? No way
+    * Film -> Polaroid (拍立得) -> Digital camera
+
+### Sampling Rate 采样率
+
+* Sampling theory - Nyquist theorem 奈奎斯特定理
+
+<img src="img/1.16.png" style="display:inline" /> <img src="img/1.17.png" style="display:inline" />
+
+### Image/Video Digitization
+
+* Digital image is a 2D array of pixels
+
+* Each pixel represented by bits
+
+  * R:G:B 
+
+    <img src="img/1.18.png" style="display:inline"/>
+
+  * Y:U:V 
+
+    * Y = 0.299R + 0.587G + 0.114B (Luminance or Brightness) 亮度
+    * U = B - Y (Chrominance 1, color difference) 色度
+    * V = R - Y (Chrominance 2, color difference)
+
+* Video is sequence of images (frames) displayed at constant frame rate
+
+  * e.g. 24 images / sec
+
+## Multimedia Compression
+
+### Why Compression?
+
+* Multimedia data are too big
+
+  * "A picture is worth a thousand words!"
+
+* File sizes for a **One-minute** Audio CD Clip
+
+  | Sampling Rate | Resolution | Channels | Bit-rate (bps) | File Size (Bytes) |
+  | ------------- | ---------- | -------- | -------------- | ----------------- |
+  | 44,100 Hz     | 16 bits    | 2        | 1,411,200      | **10,584,000**    |
+
+* File sizes for a **one-minute** QCIF video clip
+
+  | Frame Rate    | Frame Size       | Bits/pixel | Bit-rate (bps) | File Size (Bytes) |
+  | ------------- | ---------------- | ---------- | -------------- | ----------------- |
+  | 30 frames/sec | 176 x 144 pixels | 12         | 9,123,840      | **68,428,800**    |
+
+### Data Compression
+
+<img src="img/1.19.png" />
+
+* lossless compression: X' = X
+  * example: computer file compression
+  * low compression ratio
+* lossy compression: X' ≠ X
+  * many applications do not require lossless compression
+  * our eyes and ears cannot identify some details
+  * high compression ratio
+
+#### Essential of Compression
+
+* Remove redundant information
+
+  * **spatial** redundancy (空间冗余) - neighboring samples have similar values
+  * **temporal** redundancy (时间冗余) - neighboring frames in a video sequence are similar
+
+  <img src="img/1.20.png" />
+
+#### A Typical Image Compression System
+
+* Transform
+  * exploit the spatial redundancy: DCT, Wavelet, lapped transform
+* Quantization 
+  * eliminate smaller coefficients that cannot be perceived
+* Entropy coding
+  * Huffman or arithmetic coding: assign shorter codes to more probable symbols. 
+* Compressed bitstream
+  * finally we get the compressed bitstream
+
+#### Decoder
+
+<img src="img/1.21.png" />
+
+#### A typical video compression system
+
+<img src="img/1.22.png" />
+
+#### Compression Standards
+
+* why standards?
+  * a standard allows products from multiple vendors to communicate 
+    * yet, users have flexibility in selecting equipment or software
+  * assures a large market for a particular piece of equipment or software
+    * encourages mass production, VLSI technologies etc.
+    * lower costs
+  * patent war!
+    * Qualcomm, InterDigital
+* standard does not prevent innovation (?)
+  * only decoder is specified by the standard.
+  * encoder can still be improved. 
+  * example: MPEG-2
+    * bit rate has been reduced from 8Mbps in 1994 to 2Mbps now, offering the same quality.
+
+#### Standardization Bodies
+
+* ITU: International Telecommunications Union
+  * ITU-T: ITU Telecommunication Standardization Sector (CCITT)
+* ISO: International Standards Organization
+* IEC: International Electro-technical Commission
+* SMPTE: Society of Motion Picture and Television Engineers
+
+* JPEG (ISO/IEC Joint Photographic Experts Group)
+* JBIG (ISO Joint Bi-level Image Experts Group)
+* MPEG (ISO Motion Picture Experts Group)
+* VCEG (ITU-T Video Coding Experts Group)
+
+#### Image Coding Standards
+
+* JPEG:1993 (JPG file format)
+  * DCT-based block transform
+* JPEG2000: Dec. 2000
+  * Wavelet-based
+  * Much more complicated than JPEG
+* JBIG: Joint Bi-level Image Experts Group (1993)
+  * for lossless bi-level image compression (fax)
+  * can also be used for grayscale images
+* JBIG2: 1999
+  * Supports both lossless and lossy compression
+
+#### Video Coding Standards
+
+<img src="img/1.23.png" />
+
+* H.264/AVC: ITU-T H.264 / MPEG-4 (Part 10) Advanced Video Coding (AVC)
+  * Finalized in May 2003 (for general purpose)
+  * Fidelity Range Extensions (FRExt): 2003-2004 (for professional)
+
+<img src="img/1.24.png" />
+
+* H.265/HEVC (High Efficiency)
+  * 50% goal (bitrate reduction)
+  * Start from 2010
+  * February 2012: Committee Draft (complete draft of standard)
+  * July 2012: Draft International Standard
+  * January 2013: Final Draft International Standard (ready to be ratified as a Standard)
+  * April 2013: Standard released
+* Google VP9 ? H. 266?
+
+#### Coding Rate and Standards
+
+<img src="img/1.25.png" />
+
+#### Audio coding standards
+
+Range of human hearing: 20Hz - 20kHz 	->	Minimal sampling rate: 20kHz (Nyquist frequency)
+
+| format    | bit depth | sampling rate | bit rate (2 channels) |
+| --------- | --------- | ------------- | --------------------- |
+| CD Audio  | 16 bits   | 44.1 kHz      | 1,411,200 bps         |
+| DVD Audio | 24 bits   | 96 kHz        | 4,608,000 bps         |
+
+* MPEG-1 audio layer 3 (MP3)
+  * CD quality at 10 : 1 compression ratio.
+* MPEG-2 AAC (advanced audio coding):
+  * used by XM Radio (satellite radio in US)
+* MPEG-4 AAC: 
+  * up to 48 channels, 96kHz
+* ATSC AC-3: 1994
+  * Dolby Digital (5.1 channel)
+  * ATSC: Advanced Television Systems Committee
+  * For DTV, DVD
+* iTunes
+  * AAC
+  * AIFF (Audio Interchange file Format)
+* IETF OPUS / 3GPP EVS (Enhanced Voice Service)
+
+## Multimedia communications
+
+* Examples of Multimedia Communication Systems
+  * World Wide Web
+  * Video conferencing
+  * Video-on-demand
+  * interactive TV
+  * Online games
+
+#### Fundamental Characteristics
+
+* Typically **delay sensitive**
+* but can **tolerate occasional loss**
+  * infrequent losses cause minor glitches
+* CF. data transmission: (e.g. FTP)
+  * loss intolerant but delay tolerant
+
+#### Challenges in Multimedia Communications
+
+* Transmission of Compressed Multimedia
+  * real-time communications
+    * delay < 0.4 sec in video conference
+  * sequencing within the media
+  * synchronization (e.g., between video & audio)
+  * robustness to transmission error
+* We will learn how to transmit multimedia over Internet and wireless network
+
+<img src="img/1.26.png" />
+
+#### Internet
+
+* packet-switched network
+* network resources are shared
+* each packet is handled by a series of routers before being received
+* packets can be discarded if the buffer of a router is full
+* all packets are treated the same way in congestion
+
+<img src="img/1.27.png" />
+
+#### Internet protocol stack
+
+* IP: Internet Protocol
+  * best effort (unreliable)!
+* TCP: Transmission Control Protocol
+  * provides reliable (but slow) service
+* UDP: User Datagram Protocol
+  * provides unreliable (but fast) service
+  * suitable for real-time application
+* RTP: Real-time Transport Protocol
+  * packet format for multimedia streams
+* RTCP: RTP control protocol
+  * Monitor/report service quality
+* RTSP: Real-time streaming protocol
+  * "Internet VCR remote control"
+
+<img src="img/1.28.png" />
+
+#### Quality of Service (QoS) Parameters
+
+* end-to-end delay
+  * time required for the end-to-end transmission of a single data element
+* Jitter 抖动
+  * variation in delay
+* Packet loss rate 
+  * the proportion of data elements that are dropped
+* Bandwidth: bits / second (bps)
+  * rate of flow of multimedia data
+
+#### QoS Control
+
+* Algorithms to improve the QoS of Multimedia applications 
+* Policing
+  * control the input rate to network (leak bucket model)
+* Scheduling
+  * Divide buffers into logic queue
+  * Decide which queue to service next
+
+#### Error Resilience 容错能力
+
+* Improve the decoded quality in the presence of lost data
+  * often occurs in wireless networks (and also Internet)
+* add redundancy at encoder:
+  * error correction code
+  * layered coding
+  * multiple description coding
+* post-processing at decoder to hide the error
+  * error concealment
+
+## Popular multimedia tools
+
+### Popular multimedia software tools
+
+* the categories of software tools briefly examined here are:
+  1. Music Sequencing and Notation
+  2. Digital Audio
+  3. Graphics and Image Editing
+  4. Video Editing
+  5. Animation
+  6. Multimedia Authoring
+
+### Digital Audio
+
+* **digital audio** tools deal with accessing and editing the actual sampled sounds that make up audio:
+* **Cakewalk Pro Audio** / **Adobe Audition (formerly Cool Edit Pro)** 
+  * powerful and popular digital audio toolkits; emulates a professional audio studio --- multitrack productions and sound editing including digital signal processing effects. 
+  * <img src="img/1.29.png" />
+* **Pro Tools**
+  * a high-end integrated audio production and editing environment | MIDI creation and manipulation powerful audio mixing, recording, and editing software
+* **Anvil Studio**
+  * free, for MIDI
+
+### Graphics and Image/Photo Editing
+
+* **Adobe Photoshop**
+  * "Standard" image processing and manipulation tool
+  * allows layers of images, graphics, and text that can be separately manipulated for maximum flexibility.
+* **GIMP** 
+  * GNU Image Manipulation Program (free)
+* **Adobe Illustrator**
+  * a powerful publishing tool from Adobe
+  * uses vector graphics, graphics can be exported to Web.
+
+### Non-Linear Video Editing
+
+* **Adobe Premiere**
+  * an intuitive, simple video editing tool for nonlinear editing, ie, putting video clips into any order: video and audio are arranged in \tracks".
+  * provides a large number of video and audio tracks, superimpositions and virtual clips.
+  * a large library of built-in transitions, filters and motions for clips, effective multimedia productions with little effort. 
+
+### Rendering and Animation
+
+* **Autodesk 3ds Max**
+  * Rendering tool that includes a number of very high-end professional tools for character animation, game development, and visual effects production. 
+* **Autodesk Maya**
+  * end-to-end creative workflow with comprehensive tools for animation, modeling, simulation, visual effects, rendering, match moving, and compositing on a highly extensible production platform. 
+
+### Multimedia Authoring
+
+* **Adobe Flash**
+  * Allows users to create interactive movies by using the score metaphor, i.e., a timeline arranged in parallel event sequences. 
+* **Adobe Director (discontinued from 2017)**
+  * uses a movie metaphor to create interactive presentations
+  * very powerful and includes a built-in scripting language, **Lingo**, that allows creation of complex interactive movies
+* **Authorware (used to be popular, but discontinued from 2003)**
+  * a mature, well-supported authoring product based on the **Iconic/Flow-control** metaphor
+
+### Multimedia API
+
+* **DirectX**
+  * Windows API that supports video, images, audio and 3-D animation
+* **OpenGL**
+  * a highly portable, most popular 3-D API in use today.
+* **Java3D**
+  * API used by Java to construct and render 3D graphics, similar to the way in which the Java Media Framework is used for handling media files. 
+  * an abstraction layer built on top of OpenGL or DirectX (the user can select which).
+  * provides a basic set of object primitives (cube, splines, etc.) for building scenes. 
+* Android multimedia API/iOS multimedia API
+
+### Grand Challenge Problems
+
+* **Social Event Detection for Social Multimedia**: discovering social events planned and attended by people.
+* **Search and Hyperlinking of Television Content**: finding relevant video segments for a particular subject and generating useful hyperlinks for each of these segments.
+* **Geo-coordinate Prediction for Social Multimedia**: estimating the GPS coordinates of images and videos.
+* **Violent Scenes Detection in Film**: automatic detecting. 
+* **Preserving Privacy in Surveillance Videos**: methods obscuring private information (such as faces on Google Earth).
+* **Spoken Term Web Search**: searching for audio content within audio content by using an audio query.
+* **Question Answering for the Spoken Web**: a variant on the above, specifically for matching spoken questions with a collection of spoken answers.
+* **Soundtrack Selection for Commercials**: choosing the most suitable music soundtrack from a list of candidates.
+
+## Summery
+
+* Topics to be covered:
+  * Media representation
+    * Audio/Image/Video
+  * Media Compression:
+    * Digital media signals
+    * Entropy coding: Huffman, arithmetic, Golumb-Rice
+    * Quantization
+    * Transform: KLT, DCT, Wavelet, Lapped Transform
+    * Coding standards: JPEG, MPEG, MP3, H.264
+  * Multimedia Transmission:
+    * Internet Protocols
+    * Multimedia QoS
+    * QoS Control
+    * Error Resilience
+  * Multimedia database and retrieval
