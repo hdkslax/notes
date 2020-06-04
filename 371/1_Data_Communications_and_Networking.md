@@ -1,3 +1,5 @@
+
+
 ### What is the Internet
 
 * Networks include many connected devices: 
@@ -268,6 +270,15 @@ We can take different approaches to managing data
 * If data is in the form of a series of bursts, the time between bursts is not utilized. The utilization of the connection will be low if the data is a series of bursts. 
 * When the session is over the circuit is closed. 
 
+###### What does the term "burst" mean?
+
+* Burst is a term used in a number of information technology contexts to mean a specific amount of data sent or received in one intermittent operation. It can be contrasted with streamed, paced, or continuous.
+* Considering sending data from source, it will be sending at a continuous rate, one packet after another, unless we have applications that are competing (let's ignore this).
+* So the data leaves the source at a evenly spaced sequence of packets, but as it traverse through the network, it can be broken into chunks. We may have a series of packets that arrived and a few packets missing. We need to wait for those missed packets, which means by the time we get those missed packets, it took a long time to get there or to resend, we have a whole large chunk of packets that are ready to process.
+* If we get a large burst, because we are waiting for a packet. When all the data has arrived, or they generate a large bunch, then that burst will all go through it at the same time. 
+* The problem comes when the burst is big enough, that the real time reception and processing has a break where no packets are available because the burst is been put together. 
+* Then we get a blank space in the transmission, so we get a corrupted piece of video or silence audio.
+
 ###### Advantages
 
 * provides a dedicated link
@@ -310,6 +321,14 @@ We can take different approaches to managing data
 
 ###### Store and Forward node
 
+* a router or a host running routing software.
+* As each packet arrives,
+  * the header arrives, that tell us where the packet wants to go.
+  * then the rest of the packets arrives.
+  * after processing, then the router has to think about where to send it, the forwarding.
+  * notice that we have to store the whole packet before forward it, because we need to make sure that all the data has arrived and not corrupt.
+    * it needs to be stored because we can't finish calculating whether the packet is corrupted until we have the whole packet.
+  * once we done that, we've done the routing. Then we can forward the packet to next host.
 * A network node that 
   * receives and stores incoming packets.
   * checks incoming packets for bit level errors
@@ -324,7 +343,10 @@ We can take different approaches to managing data
 * at each store and forward node, delay is introduced
   * waiting for the whole packet to arrive before forwarding the packet.
   * checking the packet for transmission errors.
-  * waiting for the system to check the packet for transmission errors.
+  * forwarding the packet
+  * waiting in the transmission queue
+  * sending the packet
+  * as the packet travels to the next node
 
 ### Virtual Circuit Switching
 
@@ -342,21 +364,52 @@ We can take different approaches to managing data
 
 <img src="img/1.17.png" />
 
+### Delays in each node
+
+the blue square: router / host
+
+☺: **Transmission delay**: wait for the whole packet to arrive (or be sent)
+
+A: **Processing delay**: check that packet has not been corrupted
+
+1: **Processing delay**: forwarding, calculate which interface should the packet leave through
+
+(the processing delay begins at the first bit arrive, ends at the final bits arrived and finish the calculating of the packet is corrupt or not.)
+
+**Queueing delay**: time waited until packet begins to be transmitted. (not the property of a packet, it's the property of how busy the interface is)
+
+The three delay happens in order: processing delay -> queueing delay -> transmission delay -> processing delay -> queueing delay -> ...
+
+<img src="img/1.19.png" />
+
+##### Can a router have more than one inbound link? 一台路由器可以有多个入站链接吗？
+
+Yes. In the picture above, we have more than one outbound links, we also have more than one inbound link, because each of the links in the picture is a network card that allows two-way travel.
+
+##### As such, how does it manage to process data from all inbound links?
+
+For any inbound link, we will use the same set of processors, it will use the routing table / forwarding table, take the destination address out of the packet, using the forwarding table to decide where to send the packet. 
+
+##### Does the router process the multiple inbound links simultaneously?
+
+Not quite simultaneously. Each of the network card doing some of the processing themselves when the packets arrive and are sent. Only when the packets comes out of the network card that we can routed and decide which interfaces it goes. 
+
 ### Queuing delay
 
-* as the packet travels to each intermediate or final destination there are possible additional delays
-* each time a packet arrives at a host or router or switch there is a possibility that it must enter a queue of packets waiting to be processed. 
-* the time the packet resides in this queue, before the processing of the packet begins is the queuing delay. 
-* when a packet arrives at a store and forward node, if the store an forward node is busy processing another packet it will be placed in a queue waiting for its turn. 
-* unlike other delays, different for different packets because variations in the length of the queue independent of the packet (队列长度的变化与数据包无关).
+* After processing the packet is forwarded to the interface through which it will be transmitted. 
+* There may be other packets that have arrived from any interface on the router / host that are already waiting to be transmitted. 
+* The time from when the packet is placed in the queue to be transmitted until the time that it begins to be transmitted is the queueing delay.
+* after a packet arrives at a store and forward node and is processed by that node it may experience a queueing delay.
+* unlike other delays, the queueing delay is independent of the properties of the packet experiencing it.
 * usually analyze queuing delays statistically
+* we can't send two packets at the same time, so we can't have multiple packets arriving at the same time, they will arrive one after another.
 
 ### Processing delay
 
 * when a packet reaches a store and forward node
-  * its header must be read and analyzed
-  * its contents must be checked for bit level errors. 
-* the time taken to do such checks is the processing delay.
+  * its header must be read and analyzed to determine which interface to send the packet out through
+  * its contents must be checked for bit level errors. Completing this check requires the whole packet. 
+* the time taken to do these calculations (and perhaps some others) is the processing delay.
 
 ### Transmission delay
 
@@ -374,22 +427,26 @@ We can take different approaches to managing data
 
   $d_{prop} = d/v$ 	velocity $v$ is $2-3*10^8$
 
-  
+* Delay in the store and forwarding node does include the propagation delay, but usually the propagation delay is very small, and it's not a significant part of the delay. 
 
-Difference between router and switch?
+### Delay Types
 
-* a router is in the network layer, and it takes cares of addressing and getting things to the right place according to IP addresses. 
-* a switch is something more general, it can exist in different layers, there are different kinds of switches, and switches are simpler
-* a switch in a network layer is very similar to a router.
-* a switch can be in a lower layer working with hardware addresses instead. 
+What are the delays introduced as a packet travels from one end system to another?
 
-two main things to cause corrupted:
+* $d_{proc}$ 	Processing delay
+* $d_{queue}$	Queuing delay
+* $d_{trans}$	Transmission delay
+* $d_{prop}$	Propagation delay
+* $d_{head}$	Transmission delay (for header)
+* $d_{data}$	Transmission delay (for data)
 
-* attenuation (衰变，稀释) - if the data come through a long wire, it radiate a little power. By the time it gets the destination, the total amplitude may be small enough, it is hard to tell the difference between levels (0 or 1).
-* every wire access an antenna(天线), we use antenna both to send and receive signals. The attenuation is sending the signal out of wire. 
-  * The wire can also pick up other signals, if this happens, the other signals will add to the signal on the wire already. 
+### Packet loss
 
-what happens if a packet missed?
+* The length of the queue is finite, therefore when the system is busy it is possible for a packet to arrive and find there is no room in the queue: such a packet is dropped. 
+  * in this situation, the queuing delay is ∞.
+* A packet may have bits corrupted in transmission. Such a packet will not pass the tests for bit level errors and will thus not reach the queue at all.
+
+###### what happens if a packet missed?
 
 * Depends on protocols it uses.
 * TCP - if a packet missed, the missed packet will be request again and resent, hopefully this time it will be received successfully, it may be request and resent for several times to make sure it received successfully.
@@ -397,11 +454,325 @@ what happens if a packet missed?
   * so your application should be designed to check it.
   * or the application allows miss the data without damage.
 
-What does the term "burst" mean?
+###### Difference between router and switch?
 
-* Burst is a term used in a number of information technology contexts to mean a specific amount of data sent or received in one intermittent operation. It can be contrasted with streamed, paced, or continuous.
-* Considering sending data from source, it will be sending at a continuous rate, one packet after another, unless we have applications that are competing (let's ignore this).
-* So the data leaves the source at a evenly spaced sequence of packets, but as it traverse through the network, it can be broken into chunks. We may have a series of packets that arrived and a few packets missing. We need to wait for those missed packets, which means by the time we get those missed packets, it took a long time to get there or to resend, we have a whole large chunk of packets that are ready to process.
-* If we get a large burst, because we are waiting for a packet. When all the data has arrived, or they generate a large bunch, then that burst will all go through it at the same time. 
-* The problem comes when the burst is big enough, that the real time reception and processing has a break where no packets are available because the burst is been put together. 
-* Then we get a blank space in the transmission, so we get a corrupted piece of video or silence audio.
+* a router is in the network layer, and it takes cares of addressing and getting things to the right place according to IP addresses. 
+* a switch is something more general, it can exist in different layers, there are different kinds of switches, and switches are simpler
+* a switch in a network layer is very similar to a router.
+* a switch can be in a lower layer working with hardware addresses instead. 
+
+###### two main things to cause corrupted:
+
+* attenuation (衰变，稀释) - if the data come through a long wire, it radiate a little power. By the time it gets the destination, the total amplitude may be small enough, it is hard to tell the difference between levels (0 or 1).
+* every wire access an antenna(天线), we use antenna both to send and receive signals. The attenuation is sending the signal out of wire. 
+  * The wire can also pick up other signals, if this happens, the other signals will add to the signal on the wire already. 
+
+### Optimal Packet Size
+
+* Consider the next 3 figures. The packet takes a 2 hop path through the network
+  * message could sent as a single packet: message switching
+  * message could be broken into smaller packets: packet switching
+  * message could be sent through a connection: connection oriented
+* How do we determine the optimal size for a packet / message?
+* what delays are involved in each case?
+
+#### Message Switching
+
+* assume $t_{queue} = 0$
+* message is in $1$ packet: $d_{trans} = d_{head} + d_{data}$
+* overhead includes $1*d_{head}$ for each transmission.
+* Consider the figure below. The packet takes a 2 hop path through the network.
+  * $1st$ vertical line: the host sending the packet
+  * $2nd$ vertical line: the router in between
+  * $3rd$ vertical line: the destination
+  * upper dotted line: the first bit in the packet
+  * lower dotted line: the last bit in the packet
+* Message is sent as a single packet: message switching
+  * The amount of added overhead due to packet headers is minimal since only one packet header is needed.
+  * The intermediate nodes must wait until the entire packet has arrived before the packet can be FCS checked and queued for transmission across the next hop.
+
+<img src="img/1.20.png" />
+
+### End to end delay
+
+* for a single packet the delay at each router is $d_{nodal} = d_{proc} + d_{prop} + (d_{data} + d_{head}) + d_{queue}$
+  * $d_{nodal}$ is the delay from one node to another
+  * nodes = source, destination or any routers between them.
+* ignore the queuing delay (statistical)
+* consider a single packet (or message)
+  * the delay between the source and the receiver (the end to end delay) will be $d_{endtoend} = \{d_{proc} + d_{prop} + (d_{data} + d_{head})\} * N_{trans}$
+
+### Packet switching
+
+* assume $t_{queue}=0$
+* message is in 3 packets: $d_{trans} = d_{head} + d_{data} / 3$
+* overhead includes $3*d_{head}$, 1 header for each packet for each transmission.
+* Consider the figure below. The packets take a 2 hop path through the network.
+* When the message is broken into smaller packets (packet switching)
+  * the amount of added overhead due to packet headers increases as the size of the packet decreases
+  * the delay, waiting for each packet to arrive, at each intermediate node is reduced as the length of the packets is reduced
+  * the amount of data to be re-transmitted if a packet is lost is reduced as packet length decreases
+
+<img src="img/1.21.png" />
+
+### Effect of packet size
+
+Here we didn't add the transmission time, so the packets arrive flat at the top.
+
+The size here is based on TCP/IP, but TCP/IP only gives a range of the size. It is possible to change the maximum size, is not usually done in the application. The application usually call functions to send packets from the source to the destination.
+
+<img src="img/1.22.png" />
+
+### End to end delay: 1 packet
+
+* first consider the delay for the single packet case: 
+
+  $d_{endtoend} = \{d_{proc} + d_{prop} + (d_{data} + d_{head})\} * \{1 + (3-1)\}$ 
+
+  $d_{endtoend} = \{d_{proc} + d_{prop} + (d_{data} + d_{head})\} * \{N_{pack} + (N_{trans}-1)\}$
+
+  where
+
+  ​	$d_{data}$ 	transmission time of the packet
+
+  ​	$d_{head}$ 	transmission time of the header
+
+  ​	$d_{prop}$ 	propagation time per transmission
+
+  ​	$N_{trans}$ 	# of time the signal is transmitted
+
+  ​	$N_{pack}$ 	# of packets
+
+### End to end delay: 2 packets
+
+* When there are 2 packets, 
+
+  * the first packet travels from the 2nd node to the 3rd node
+  * at the same time the 2nd packet travels from the 1st node to the 2nd node
+
+* The delay becomes
+
+  $d_{endtoend} = \{d_{proc} + d_{prop} + (d_{data} + d_{head})\} * \{2 + (3-1)\}$
+
+  $d_{endtoend} = \{d_{proc} + d_{prop} + (d_{data} + d_{head})\} * \{N_{pack} + (N_{trans}-1)\}$
+
+### End to end delay: 5 packets
+
+* For the 5 packet case: 
+
+  $d_{endtoend} = \{d_{proc} + d_{prop} + (d_{data} + d_{head})\} * \{5 + (3-1)\}$
+
+  $d_{endtoend} = \{d_{proc} + d_{prop} + (d_{data} + d_{head})\} * \{N_{pack} + (N_{trans}-1)\}$ 
+
+### Packet size considerations
+
+* Delay is introduced by requiring packet, or section of message, to arrive at an intermediate station before the message is forwarded is smaller than for message switching.
+* Packet headers add additional overhead that increases as the size of the packet decreases.
+* Waits for next link will be minimized if smaller packets of data are being transmitted as single units.
+* Shorter packets are less likely to contain errors and require re-transmission than long messages.
+* Required re-transmissions are shorter, and add less additional load to the system.
+* As the size increase, the delay decrease first, then increase.
+* The packet sizes decreasing would not lead the processing delay decrease. It makes the packet receive faster, but it already counted in the transmission delay. So it would not make a lot of difference to the processing delay.
+* Is there a formula to calculate the best packet size?
+  * 
+
+### Packet Switching
+
+* no call setup or call termination required.
+* each packet, referred to as a datagram(电报), is sent individually, and is routed through the network individually.
+* Packets with the same source and destination may take different paths through the network and thus may arrive at the receiver out of order.
+* flexible reaction to congestion and failure
+* robust delivery of packets, less loss of information in lost packet than in broken virtual connection when a node fails.
+
+### Circuit switching
+
+* message is in 1 block
+* no headers
+* overhead includes establishing and breaking connection
+  * if someone does not send data continuously, the bandwidth will be not be used, the efficiency goes down
+* the call request signal - to request the connection
+* the connection is dedicated - the direction connection will be made physically through a switching array.
+* any further information passing through after that connection been made will go through directly.
+* once we establishing the dedicated connection / the dedicated bandwidth for all information, we can send as much information as we like.
+* when finishing the call, we can send a end-call signal to the system to break the connection and to release the hardware for someone else to use.
+* ack - acknowledgement 确认 = which says the endpoint received the data.
+
+<img src="img/1.23.png" />
+
+
+
+### End to End Throughput 端到端吞吐量
+
+* The amount of data that can pass through from one edge system to another: 
+  * (瞬时的)Instantaneous end to end throughput: rate data is passing between the end systems at a particular instant
+  * average end to end throughput: rate data is passing between the end systems averaged over a specified length of time.
+
+### End to end throughput considerations
+
+* for some processes like video, efficient operation requires a minimum level of instantaneous throughput over time and a minimum level of average end to end throughput.
+  * if the throughput below the minimum level of average throughput for a short time, there will not be enough data to keep the process running.
+* for some processes like mail, efficient operation requires only a minimum average end to end throughput level.
+  * the requirement is only it arrives.
+
+### Bottleneck Link: throughput
+
+吞吐量等于*瓶颈链路*（bottleneck link）的传输速率.
+
+As B>>C, when data comes into Router2 in rate B, out in rate C, the queue in Router2 eventually fill up and start to dropping packets, because it can't transmission out as it comes in, there is a bottleneck.
+
+Same situation in Router3 when transferring data from A to C.
+
+To send data without losing data, the speed should be the minimum capacity through the path.
+
+<img src="img/1.24.png" />
+
+###### How does the server/client know to send a lower rate? Does a router report its connection speed?
+
+* If using UDP, it may not know, it will just lose packets; (best-effort)
+* if using TCP, it will detect that more and more packets are being lost, and when it detect it has to re-send more and more packets, it will send the packets at a lower speed. 
+
+### Access Networks 接入网络
+
+* Mobile Networks
+* National ISP (Internet Service Provider)
+* Local ISP
+  * ISPs use ADSL(非对称数字用户环线(Asymmetrical Digital Subscriber Loop)), Cable, wireless, fiber
+* Enterprise (business) network
+* Home network
+
+### Multiplexing 多路复用
+
+* When multiple signals are carried through a single transmission medium at the same time, the signals are multiplexed.
+
+  * the ISP combine a lot of people' signal together, and put them onto the pipe all at once.
+
+* Multiplexing allows the efficient use of wider band transmission media. Such media can carry multiple narrower band signals. 
+
+  * Long haul links (远程连接) are frequently examples of high capacity channels. (长途链路通常是高容量信道的示例。)
+
+* The multiple signals must be combined or multiplexed in such a way that the individual signals can be easily extracted from the composite signal (demultiplexed) on reception.
+
+  (必须以这样的方式对多个信号进行组合或复用，以便在接收时可以轻松地从复合信号中提取单个信号（解复用）)
+
+### Methods of Multiplexing 
+
+（MUX = multiplexor, DEMUX = de-multiplexor）
+
+* Frequency Division Multiplexing 分频多路传输
+  * give each signal a range of frequency
+* Time Division Multiplexing 分时多路复用 - divide into chunks the flow of time. 
+  * *Synchronous* 同步的 - User A will use n milliseconds long, user B will use n milliseconds long, and C will use n milliseconds long, ...
+  * *Statistical*
+* Code Division Multiplexing (spread spectrum) 码分复用（扩频）
+  * CDMA telephone
+  * it divides the signals between the basis functions.
+
+<img src="img/1.25.png" />
+
+<img src="img/1.26.png" />
+
+### Frequency Division Multiplexing 分频多路复用
+
+* When the transmission media has a bandwidth many times larger than the bandwidth of the signal to be transmitted, it makes sense to transmit more than one signal at a time through the medium.
+* each of the signals to be transmitted are modulated to a different carrier frequency. 
+* the different carrier frequencies are separated by at least the bandwidth of the individual signals to be transmitted
+* the frequency bandwidth is shared by the signals being simultaneously transmitted.
+* $f_i$ is the central frequency of each frequency range
+
+<img src="img/1.27.png" />
+
+* examples of FDM include multiplexing of voice signals over telephone lines, and multiplexing of cable channels into the allocated cable frequency band.
+* FDM can be done in stages. M signals can be multiplexed into a particular frequency band. Groups of M signal can then be combined and multiplexed into a larger frequency band.
+
+<img src="img/1.28.png" />
+
+##### FDM and voice signals: 1
+
+* A typical voice signal has an effective spectrum(频谱) of 300 to 3400Hz. When multiplexing signals the signals must be adequately separated, so allow 4KHz bandwidth for each voice signal.
+* A voice signal can be modulated so that the spectrum of the modulated signals has a center frequency at the frequency of the modulation carrier $f_c$.
+* If the carrier has a bandwidth between $f_1$ Hz and $f_2$ Hz then $f_c$ would be chosen to be $f_1+4KHz$
+
+### Cable and ADSL
+
+* ADSL uses the fixed telephone system. (FDM)
+  * each user has a dedicated connection to the end office
+  * user must be close enough to the end office
+  * each of these connections use twisted pair
+  * capacity of twisted pair less than capacity of cable
+  * uses FDM
+* Cable(电缆) shares a higher capacity coaxial cable between multiple users. (TDM)
+  * available capacity may be higher or lower than ADSL
+  * can intercept packets of other users on the same link (可以拦截同一链接上其他用户的数据包)
+  * uses TDM
+
+<img src="img/1.29.png" />
+
+#### ADSL
+
+* Asymmetric Digital Subscriber Line, to 20Mbps downstream and 100 Mbps upstream (Typically 512 kbps and 64 kbps)
+* Provides high speed access over twisted pair telephone wires. Up to 256 4MHz channels available
+  * Normal telephone connection filtered to 4KHz bandwidth at end office (switching station)
+  * For ADSL filter is removed making entire capacity of the twisted pair (category 3) available to the user. The capacity and attainable speed depend on the distance from the end office (length of connection).
+* Typical user needs more downstream capacity than upstream capacity for internet applications.
+* Uses FDM and/or discrete multitone (DMT)
+
+<img src="img/1.30.png" />
+
+#### Wavelength Division Multiplexing 波分复用
+
+* used with optical fibre
+* light passing through the fiber consists of many colors or wavelengths (frequencies)
+* each wavelength carries a signal
+* the fiber can carry many signals at the same time, as signals with different wavelengths
+* as many as 160 channels at 10 Gbps
+* used for cable (between central offices)
+
+### TDM (Time Division)
+
+* The data are organized in frames
+* Each frame contains a cycle of time slots
+* a sequence of slots dedicated to one source is a channel
+* data from different sources is inserted into slots or channels in some sequence
+  * Synchronous TDM slots are filled from a predetermined sequence of sources. If there is no data to transmit an 'idle' signal is sent (circuit switching)
+  * Statistical TDM fills slots as data is available. There is not preset sequences. Therefore, data must be associated with the source by address. No empty or 'idle' slots are sent if any source has data ready to transmit. Idle is sent only if all channels have no data to transmit (packet switching)
+
+#### Synchronous TDM
+
+<img src="img/1.31.png" />
+
+#### Statistical TDM
+
+* Time slots are not pre-allocated to particular sources, they are allocated on demand.
+* There are M sources, N available channels .: M>=N
+* Rather than transmitting an idle signal when no data is available from a source i, data from source j can be transmitted.
+* The data rate of the transmission line can be smaller than the sum of the data rates for all sources being serviced (传输线的数据速率可以小于正在服务的所有源的数据速率之和)
+* At peak times the data rate of received data from the sources may exceed the data rate of the transmission media. In these cases excess data must be buffered in the multiplexer for later transmission.
+* Statistical TDM is most useful is systems where sources do not broadcast continuously.
+* If each source broadcasts 80% of the time. Statistical TDM can handle 20% more channels than asynchronous TDM
+* There are overhead costs associated with this gain in efficiency. 
+* Sources are not transmitted in a predetermined order, so there is not a direct way to know which source is being transmitted in a given channel. Thus, each channel must contain an address that indicates the source
+
+### Internet over Cable
+
+* HFC (Hybrid Fiber and Coax systems 混合光纤和同轴电缆系统)
+  * Coaxial cables for users and local branches
+  * Branches connecting to optical fiber trunks
+* Use a cable modem connected to your computer 
+* Cable modems follow DOCSIS (Data Over Cable Service Interface Specification 电缆数据服务接口规范)
+* Asymmetric data flow 非对称数据流
+
+<img src="img/1.32.png" />
+
+### Data transfer using cable
+
+* Upstream channel (from user) is divided into slots. Each modem is assigned a slot. More than one modem can be assigned to a particular slot causing possible contention(争夺)
+* A user will request downstream capacity, be granted(授予) the capacity and then receive the information at the appointed time (指定的时间)
+
+### Cable Modem TDM Scheme
+
+<img src="img/1.33.png" />
+
+<img src="img/1.34.png" />
+
+<img src="img/1.35.png" />
+
