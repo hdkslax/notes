@@ -113,7 +113,7 @@
   * Send back a response containing the object
   * Send an acknowledgement that the object has been received
 * We wait for the first object to be received before requesting the next object.
-  * piggyback
+  * piggyback - the original ACK received, and the SYN packet which contains negotiations about parameters. Send them as one packet is called piggyback ACK. The only thing to change is in one of the files of the IP header, we have to set a flag called the ACK flag that indicates this packet is acknowledgement. Can be used in both non-persistent connection and persistent connection. If there's no data to send, we put the acknowledgement packet without data.
 
 <img src="img/3.4.png" />
 
@@ -307,6 +307,7 @@ Yellow box: contains additional data sending to the server
 
 * Upgrade speed of internet link (expensive)
 * Utilization of institutional network 
+  
   * 15 * 100K /10 Mbps = 15%
 * Utilization internet connection for requests (no cache)
   * 15 * 100K /10 Mbps = 15%  

@@ -48,12 +48,12 @@
   * arpa = advanced research projects agency (高级研究规划局), com = commercial, edu, gov are separated by use.
   * us, uk, ca, fr are separated by country
 
-<img src="img/3.14.png" />
+<img src="img/5.1.png" />
 
 * Children of different parents can have the same name
 * All children of a given parent must have unique names
 
-<img src="img/3.15.png" />
+<img src="img/5.2.png" />
 
 ### Constructing names: name tree
 
@@ -68,7 +68,7 @@
 
 ###### example: jpl.nasa.gov.
 
-<img src="img/3.16.png" />
+<img src="img/5.3.png" />
 
 ### Fully Qualified Domain Name 全称域名
 
@@ -115,6 +115,10 @@
 
 * We can use partial names if our systems can properly configure to deal with partial names. 
 
+* If there are two host have the same name but in different DNS servers, using not fully qualified domain name may result in wrong results.
+
+  * eg. zero.cs.sfu.ca and zero.math.sfu.ca both exist, if we want to get the IP address of zero.math.sfu.ca, only use "zero" will return back the IP address of zero.cs.sfu.ca
+
 #### resolv.conf: search
 
 * search followed by a series of domain names (defaults are generated, in addition you can set the list yourself in versions 4.9 and later)
@@ -124,21 +128,21 @@
 
 ### Authority for the DNS namespace (DNS名称空间的权限)
 
+* Authority - organization running the DNS servers for a particular domain, those DNS servers are authoritative domain, which means that domain has been delegated from the higher authority above it on the next level up of the nodes.
 * The central internet authority was ICANN (Internet corporation for assigned numbers and names) and is now IANA (Internet assigned numbers authority). 
-
-  * Responsibility for the root level **.** domain rests with IANA
+* Responsibility for the root level **.** domain rests with IANA
   * TLDs, top level directories for the internet namespace
     * include generic TLDs (gTLDs) like .com or .org for classification of domain names by type of use
     * include country code TLDs (ccTLDs) like .ca or .us for geographical classification of domain names
   * Responsibility for administering the TLDs has been delegated to other contractors by IANA. (IANA已将管理顶级域名（TLD）的职责委托给其他承包商)
-
 * Any organization to which responsibility for a DNS domain is delegated 
 
   * must provide at least two independent DNS servers to service that domain 
     * These DNS servers must be geographically separated
+      * if one server doesn't work properly, the other one can continue to support the requests, so that the DNS network will not failed.
+      * SFU's another DNS server is in UBC, and UBC's another DNS server is in SFU.
     * These servers must be configured to provide continuous service
   * may delegate authority for parts of the DNS domain for which they are responsible to other organizations.
-
 * Each DNS server must know the name/address of the servers it has delegated responsibility to.
 
   * The delegator of authority need not inform all organizations it delegates to of changes made by other such organizations. This is an unreasonable load in a rapidly growing/changing internet.
@@ -148,8 +152,9 @@
 ### DNS Name Tree: Domains
 
 * Root domain 只包含第二级的domain names
+* e.g. sfu is authoritative/responsible for all host under sfu node that have not been delegated to another authority. 
 
-<img src="img/3.17.png" />
+<img src="img/5.4.png" />
 
 ###### Examples of delegation(授权)
 
@@ -157,7 +162,7 @@
 * TLD .ca delegates authority to BC to manage top level domain .bc
 * Domain .bc delegates authority to the BC government to manage domain gov.bc.ca
 
-<img src="img/3.18.png" />
+<img src="img/5.5.png" />
 
 ### How many DNS servers?
 
@@ -193,10 +198,6 @@
   * Sub domains in a zone may or may not have authority delegated to other administrative authorities. Any subset of sub-domains may be delegated
   * The domain name of the zone is the domain name of domain with the same root domain name
 
-###### DNS Name Tree: zones
-
-<img src="img/3.19.png" />
-
 ### Domain Name System - zone
 
 * A DNS zone is a subtree 
@@ -204,6 +205,10 @@
   * The administrative authority for the zone must maintain at least two completely independent DNS servers for the zone
   * A given zone will have a corresponding zone in the arpa subtree to be used for inverse queries
   * A zone may delegate some of its sub domains and not other
+
+###### DNS Name Tree: zones
+
+<img src="img/5.6.png" />
 
 ### Authority for the DNS namespace
 
@@ -214,5 +219,133 @@
     * excludes information about further delegation of authority in delegated zones or hosts in delegated domains
   * Root servers contain the delegation information for all TLDs
 
+### Difference between domains and zones
+
+* Zones are x	
+* Domains are subtree
+
+### Operation of a DNS server
+
+* A DNS name server is initialized, knowing the addresses of the root servers, knowing the addresses of some other servers, or with the zone data files for one or more zones. 
+* As queries are made the information received from the queries is added to a cache.
+  * Entries generally have a long (hours to days) lifetime.
+  * Lifetime (TTL) is set by administrator when configuring the server, or reset by the administrator at a later time
+    * Shorter lifetime keeps information up to date but causes increased load of queries to the DNS server
+    * TTL = time to live 一个封包在网络上可以存活的时间
+* When further queries are made the cache is checked before queries are transmitted
+
+### How DNS server answer a query
+
+* There are two approaches to answering a query
+  * **Iterative:** the name server receiving the query, responds with either the IP address of the host or the name of the next server it would consult (next higher server in the tree)
+  * **Recursive:** The name server receiving the query, responds with either the IP address of the host or a negative response indicating that the address of the host is not available. The queried server may make additional requests to obtain the address to return.
+
+### Submitting a query from a host
+
+* A host Drab, in domain cs.sfu.ca requests IP address for ftp.isc.org
+  * Drab expects to receive the IP address of ftp.isc.org without making additional queries. 
+  * The resolver (resolving software such as dig) on Drab it is making a recursive request that requires the local DNS server (symour) to 
+    * Make an additional request or requests. 
+    * Analyze the reply or replies to the request/s
+    * Supply the resulting IP address and potentially other related information to Drab.
+
+### Query from the local DNS server
+
+* The DNS server must then determine the desired IP address. It will make a series of iterative requests for information on the address of ftp.isc.org. (This example assumes the DNS server has not recently resolved a .org address and does not have cached information on these addresses)
+  * The DNS server, seymour, will send a request to one of the root servers. The longest match the root server can make will be to the TLD .org (because .org has been delegated)
+    * The root server will send back a response with the IP address and name of an authoritative server for the .org domain (plus other information) 
+* The DNS server's resolving software will process the returned data, add the DNS server for the .org domain to the cache, and formulate a request to the DNS server for the .org domain 
+* The local DNS server will send a request to one of the DNS servers for the domain .org 
+  * The DNS server for the domain .org will send back a response with the IP address and name (plus other information) of an authoritative server for the isc.org domain. The isc.org domain has been delegated by the .org DNS server to the ISC, so no longer domain name match can be made (因此无法再进行域名匹配).
+* The local DNS server's resolver will process the returned data, add the DNS server for the isc.org domain to the cache, and formulate a request to the DNS server for the isc.org domain
+* The local DNS server's resolver will send a request to one of the DNS servers for the domain isc.org 
+  * The DNS server for the domain isc.org will send back a response with the IP address and name (plus other information) of ftp.isc.org.
+* The local DNS server's resolver will process the returned data,  
+  * add an entry for the ftp.isc.org to the cache
+  * formulate a reply to the original request from host Drab
+* This is a iterative queries between DNS servers.
+
+<img src="img/5.8.png" />
+
+### Using the Cache: subsequent queries
+
+* A later query to [ftp.isc.org](ftp://ftp.isc.org/) will find the IP address available in the local DNS servers cache. The DNS server will send back the results without making further queries
+* A later query to [ftp2.isc.org](ftp://ftp2.isc.org/) will find the entry for isc.org DNS server in the cache of the local DNS server. A single query to the isc.org DNS server will provide the needed information
+* A later query to qu.openoffice.org will find the entry for .org DNS server in the cache of the local DNS server. Two queries to the .org and the openoffice.org DNS servers respectively will provide the required information. There is no need to contact the root server
+
+### Authoritative Responses 权威回应
+
+* An authoritative response is an answer that (directly) comes from the DNS server responsible for the zone containing the domain name being queried.
+  * If you make a request to another server that have the address you're look for in its cache because someone has already ask for it, then it will send back an answer immediately and that answer will not be authoritative because it does not come back from the DNS server that are responsible for the particular host you are asking about.
+* The local DNS server will cache results from each external query
+* If an additional query for the same address is made soon after the first, the results will be found in the cache of the DNS server. No contact will have been made with the authoritative server.
+  * The received response is not from the authoritative server and may be labelled as an non-authoritative response
+
+###### Why is it important to get authoritative responses?
+
+* Things can change. If you don't have an authoritative answer, you cannot be 100% sure.
+* By getting an authoritative responses and requesting responses, you know that no one in the middle has been either damaging, changing, or corrupting the entry. So you can be more sure it is correct.
+* However, for most applications, they just taking the one from the first place they found.
+
+### Recursive Requests
+
+* In the example above the resolver on the host made a recursive request, and the DNS server made only iterative requests.
+* DNS servers can also make recursive requests. However, busy DNS servers are often configured to accept only iterative requests. (this way they do not need to process the returning results as well, this reduces load on the busy server). Therefore, the iterative approach is more commonly used by DNS servers
+* This recursive queries put a lot of load on the root server if everyone made recursive request to the root server instead of iterative request. 
+* If from experience the DNS server on the left knows some of the server on the right don't accept the DNS server   request, it will send recursive request to the root server but not iterative request to that server.
+* In recursive queries, it will be cached on each level, so the intermediate server have a heavy load. :(
+
+<img src="img/5.9.png" />
+
 ### Domain Server Message
+
+* Messages exchanged between clients and servers
+* identification
+  * help us match the request and reply
+* number of questions / answers / authority / additional
+  * we can make more than one request in a single request message
+  * each request we made is one single question (what is the IP address of sfu.ca.)
+  * when sending the request message, all are empty except 'number of questions'
+  * response message will include number of answers section
+  * number of authority section tells us the names/addresses of the intermediate DNS servers that were referred to us.
+
+<img src="img/5.7.png" />
+
+###### example using dig (sending from the server)
+
+```
+jregan15: dig ftp.isc.org
+; <<>> DiG 9.2.1 <<>> ftp.isc.org
+;; global options:  printcmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 33180
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 4, ADDITIONAL: 5
+
+;; QUESTION SECTION:
+;ftp.isc.org.                   IN      A
+
+;; ANSWER SECTION:
+ftp.isc.org.            2898    IN      A       204.152.184.110
+
+;; AUTHORITY SECTION:
+isc.org.                2898    IN      NS      ns-ext.lga1.isc.org.
+isc.org.                2898    IN      NS      ns-ext.nrt1.isc.org.
+isc.org.                2898    IN      NS      ns-ext.sth1.isc.org.
+isc.org.                2898    IN      NS      ns-ext.isc.org.         
+(// 2898 = seconds it will be hold in the cache before the cache entry expires)
+
+;; ADDITIONAL SECTION:
+ns-ext.lga1.isc.org.    75012   IN      A       192.228.91.19
+ns-ext.nrt1.isc.org.    75012   IN      A       192.228.90.19
+ns-ext.sth1.isc.org.    75012   IN      A       192.228.89.19
+ns-ext.isc.org.         29497   IN      A       204.152.184.64          // IPv4 address
+ns-ext.isc.org.         155246  IN      AAAA    2001:4f8:0:2::13        // IPv6 address
+
+;; Query time: 1 msec
+;; SERVER: 199.60.1.1#53(199.60.1.1)
+;; WHEN: Fri Nov  5 06:21:09 2004
+;; MSG SIZE  rcvd: 236
+```
+
+
 
