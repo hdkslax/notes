@@ -162,6 +162,7 @@ Adobe's [DNG (Digital Negative)](http://en.wikipedia.org/wiki/Digital_Negative_(
   * U, V: Chrominance components (blue and red) 彩色分量
 
     * the difference between a color and a reference
+    * 任意一种颜色与亮度相同的一个指定的参考色之间的差异，如彩色电视采用白色为参考色
 
   * white at the same luminance
 
@@ -187,7 +188,7 @@ Adobe's [DNG (Digital Negative)](http://en.wikipedia.org/wiki/Digital_Negative_(
 
 * RGB are correlated, Y Cb Cr are not 
 * Most information is in Y channel (brightness)
-  * Cb and Cr are small à easier for compression
+  * Cb and Cr are small -> easier for compression
 * Human eyes are not sensitive to color error
   * Don't need high resolution for color component
 
@@ -203,15 +204,15 @@ $$
 
 ​	$Y' = 0.299R' + 0.587G' + 0.114B'$
 
-​	$Y' = -0.299R' + (-0.587)G' + 0.886B'$
+​	$U = -0.299R' + (-0.587)G' + 0.886B'$
 
-​	$Y' = 0.701R' + (-0.587)G' + (-0.114)B'$
+​	$V = 0.701R' + (-0.587)G' + (-0.114)B'$
 
-From the equation, the green color is more sensitive for human
+From the equation, the *green* color is more sensitive for human
 
 This matrix is called conversion matrix.
 
-For a gray clolor, *R′* = *G′* = *B′*, the luminance *Y′* equals to that gray, since 0.299+0.587+0.114 = 1.0. And for a gray (“black and white”) image, the chrominance (*U*, *V* ) is zero.
+For a gray color, *R′* = *G′* = *B′*, the luminance *Y′* equals to that gray, since 0.299+0.587+0.114 = 1.0. And for a gray (“black and white”) image, the chrominance (*U*, *V* ) is zero.
 
 ### Color Space: YCoCg
 
@@ -262,7 +263,7 @@ For a gray clolor, *R′* = *G′* = *B′*, the luminance *Y′* equals to that
 * 1st picture
 
   * 4x4 pixels
-  * YUV 4:4:4 - no downsamping of Chroma
+  * YUV 4:4:4 - no down-sampling of Chroma
 
 * 2nd picture
 
@@ -280,14 +281,23 @@ For a gray clolor, *R′* = *G′* = *B′*, the luminance *Y′* equals to that
 ### Raw YUV Data File Format
 
 * In YUV 4:2:0, number of U and V samples are 1/4 of the Y samples
+
 * YUV samples are stored separately: 
   * Image: YYYY…..Y UU…U VV…V
     * (row by row in each channel)
   *  Video: YUV of frame 1, YUV of frame 2, ……
-* CIF (Common Intermediate format): 
+  
+  <img src="img/3.30.png" />
+  
+* CIF (Common Intermediate format) 通用影像传输格式: 
+  
   * 352 x 288 pixels for Y, 176 x 144 pixels for U, V
+  
 * QCIF (Quarter CIF): 176 x 144 pixels for Y, 88 x 72 pixels for U, V
+
 * CIF, and QCIF formats are widely used for video conference
+
+  <img src="img/3.14.png" />
 
 <img src="img/3.15.png" />
 
@@ -361,7 +371,7 @@ Monochrome 1-bit Lena image:
 
   * Fairly high resolution for such an image might be 1,600 x 1,200, whereas lower resolution might be 640 x 480.
 
-* **Frame buffer**: Hardware used to store bitmap.
+* **Frame buffer**(帧缓冲器): Hardware used to store bitmap.
 
   * **Video card** (actually a *graphics card*) is used for this purpose.
   * The resolution of the video card does not have to match the desired resolution of the image, but if not enough video card memory is available then the data has to be shifted around in RAM for display.
@@ -372,7 +382,7 @@ Monochrome 1-bit Lena image:
 
   video card read bits as: read all the 1st bits in all bytes in Plane 0, then read all 2nd bits in all bytes in Plane 0, ...
 
-  After finish reading the Plane, the video card will refine it to plane 1 but not read all bits in plane 1.
+  After finish reading the Plane, the video card will refine it to plane 1 but not read all bits in plane 2, 3, 4 ....
 
 ### Grayscale Image
 
@@ -391,7 +401,7 @@ Monochrome 1-bit Lena image:
 
 * **Rationale:**(基本原理) calculate square patterns of dots such that values from 0 to 255 correspond to patterns that are more and more filled at darker pixel values, for printing on a 1-bit printer. 
 
-* **Strategy:** Replace a pixel value by a larger pattern, say 2x 2 or 4 x 4, such that the number of printed dots approximates the varying-sized disks of ink used in analog, in **halftone printing**(半色调印刷) (e.g., for newspaper photos).
+* **Strategy:** Replace a pixel value by a larger pattern, say 2x 2 or 4 x 4, such that the number of printed dots approximates the varying-sized disks of ink used in analog, in **halftone printing**(半色调印刷) (e.g., for newspaper photos). 用较大的图案（例如2x 2或4 x 4）替换像素值，以便在半色调印刷（例如，报纸照片）中，打印点的数量近似于模拟中使用的各种尺寸的墨水盘 ）
 
   1. Half-tone printing is an analog process that uses smaller or larger filled circles of black ink to represent shading, for newspaper printing.
 
@@ -465,7 +475,8 @@ Monochrome 1-bit Lena image:
 
 ### 24-bit Color Images
 
-* In a color 24-bit image, each pixel is represented by three bytes, usually representing RGB.
+* In a **color 24-bit image**, each pixel is represented by **three bytes**, usually representing **RGB**.
+  * 24-bit color also called true color
   * This format supports 256x 256x 256 possible combined colors, or a total of 16,777,216 possible colors.
   * However such flexibility does result in a storage penalty: A 640x480 24-bit color image would require 921.6 kB of storage without any compression.
 * **An important point**: many 24-bit color images are actually stored as 32-bit images, with the extra byte of data for each pixel used to store an *alpha* value representing special effect information (e.g., transparency).
@@ -473,5 +484,82 @@ Monochrome 1-bit Lena image:
 
 <img src="img/3.29.png" />
 
+### Beyond 24-bit Color Images
 
+* More information about the scene being imaged can be gained by using more accuracy for pixel depth (64 bits, say); or by using special cameras that view more than just three colors (i.e., RGB)
+  * use invisible light (e.g., infra-red, ultraviolet) for security cameras: "dark flash"
+  * use higher-dimensional medical images of skin (> 3-D) to diagnose skin cancer. 
+    * high resolution
+    * beyond 3-D
+    * beyond 24-bit color space
+  * in satellite imaging, use high-Depth to obtain types of crop growth, etc.
+* Such images are called *multispectral*(多谱段的) (more than 3 colors) or hyperspectral (a great many image planes, say 224 colors for satellite imaging)
+
+### 8-bit Color Images
+
+* Many systems can make use of 8 bits of color information (the so-called “256 colors”) in producing a screen image. Why ?
+
+  * it does not necessary mean that 2 bits for R, 2 bits for G, 4 bits for B, or 3 bits for R, 3 bits for G, 2 bits for B.
+
+  * If using this way, the color resolution will much coster.
+
+  * Many pictures don't have many colors, so we don't usually use all 8 bits
+
+    <img src="img/3.31.png" />
+
+* Many systems can make use of 8 bits of color information (the so-called “256 colors”) in producing a screen image.
+
+* Such image files use the concept of a **(color index) lookup table** to store color information.
+
+  * Basically, the image stores not color, but instead just a set of bytes, each of which is actually an index into a table with 3-byte values that specify the color for a pixel with that lookup table index.
+
+* Example of 8-bit color image
+
+  <img src="img/3.32.png" />
+
+* Note the great savings in space for 8-bit images, over 24-bit ones: a 640x480 8-bit color image only requires 300 kB of storage, compared to 921.6 kB for a color image (again, without any compression applied).
+
+### Color Look-up Tables (LUTs)
+
+* The idea used in 8-bit color images is to store only the index, or code value, for each pixel. Then, e.g., if a pixel stores the value 25, the meaning is to go to row 25 in a color look-up table (LUT).
+
+* Color LUT for 8-bit color images
+
+  <img src="img/3.33.png" />
+
+* (a): A 24-bit color image of “Lena”
+
+  (b): The same image reduced to only 5 bits via dithering 
+
+  (c): A detail of the left eye
+
+  <img src="img/3.34.png" />
+
+### More about Histogram(直方图) (and the power of digitization)
+
+* histogram - the distribution of the grayscale or the brightness; in colored case, this is the brightness for each channel or combined.
+  *  From this histogram, you can see if the picture is too dark or over-exposure (too much brightness).
+* Auto levels - colors will become more balanced and more vivid
+
+<img src="img/3.35.png" />
+
+<img src="img/3.36.png" />
+
+
+
+<img src="img/3.37.png" style="display:inline"/> <img src="img/3.38.png" style="display: inline"/>
+
+<img src="img/3.39.png" style="display: inline"/> <img src="img/3.40.png" style="display: inline"/> 
+
+* The 2nd picture is better than the 1st one
+  * By looking up the histogram, 1st one is under-explored, it's too dark
+  * 2nd one contains more information
+
+<img src="img/3.41.png" style="display: inline"/> <img src="img/3.42.png" style="display: inline"/> 
+
+<img src="img/3.43.png" style="display: inline"> <img src="img/3.44.png" style="display: inline"/>
+
+* The first one is too dark ,a typical under-explored picture.
+* 2nd histogram simply stretched the 1st one.
+  * stretch - using cumulative distribution and extend each bar in the histogram.
 
