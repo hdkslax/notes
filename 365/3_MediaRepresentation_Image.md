@@ -283,16 +283,17 @@ For a gray color, *R′* = *G′* = *B′*, the luminance *Y′* equals to that 
 * In YUV 4:2:0, number of U and V samples are 1/4 of the Y samples
 
 * YUV samples are stored separately: 
+
   * Image: YYYY…..Y UU…U VV…V
     * (row by row in each channel)
-  *  Video: YUV of frame 1, YUV of frame 2, ……
-  
+  * Video: YUV of frame 1, YUV of frame 2, ……
+
   <img src="img/3.30.png" />
-  
+
 * CIF (Common Intermediate format) 通用影像传输格式: 
-  
+
   * 352 x 288 pixels for Y, 176 x 144 pixels for U, V
-  
+
 * QCIF (Quarter CIF): 176 x 144 pixels for Y, 88 x 72 pixels for U, V
 
 * CIF, and QCIF formats are widely used for video conference
@@ -413,7 +414,7 @@ Monochrome 1-bit Lena image:
 
 * The rule is:
 
-   If the intensity is > the dither matrix entry then print an on dot at that entry location: replace each pixel by an *n x n* matrix of dots.
+  If the intensity is > the dither matrix entry then print an on dot at that entry location: replace each pixel by an *n x n* matrix of dots.
 
   e.g. If the intensity is 3, then the dither matrix is 
 
@@ -562,4 +563,164 @@ Monochrome 1-bit Lena image:
 * The first one is too dark ,a typical under-explored picture.
 * 2nd histogram simply stretched the 1st one.
   * stretch - using cumulative distribution and extend each bar in the histogram.
+
+<img src="img/3.45.png" />
+
+<img src="img/3.46.png" style="display: inline" /> <img src="img/3.47.png" style="display: inline"/> 
+
+* High Dynamic Range (HDR) Image 高动态范围（HDR）图像
+
+  <img src="img/3.48.png" />
+
+  <img src="img/3.49.png" style="display: inline"/> <img src="img/3.50.png" display="inline" />
+
+* High Dynamic Range (HDR) Image 
+
+  * for professional photographer - HDR is bad since the photos are not realistic
+
+### Popular File Formats
+
+* **8-bit GIF** : one of the most important formats because of its historical connection to the WWW and HTML markup language as the first image type recognized by net browsers.
+* **JPEG**: currently the most important common file format.
+
+### GIF
+
+* **GIF standard**: (We examine GIF standard because it is so simple! yet contains many common elements.)
+
+  ​     -- Graphics Interchange Format 
+
+  * difference between graphics and images: 
+    * graphics: syntactic objects, related to matrix or those things related to man-made graphic objects using  mathematical tools
+    * image: natural image, captured from the real world
+
+* Limited to 8-bit (256) color images only, which, while producing acceptable color images, is best suited for images with few distinctive colors (e.g., graphics or drawing).
+
+  * but it's not for professional use
+
+* GIF standard supports **interlacing**(间隔行) — successive display of pixels in widely-spaced rows by a 4-pass display process. （通过四遍显示过程在宽行中连续显示像素。）
+
+* GIF actually comes in two flavors:
+
+  1. **GIF87a**: The original specification.
+
+  2. **GIF89a**: The later version. Supports simple animation via a Graphics Control Extension block in the data, provides simple control over delay time, a transparency index, etc.
+
+* General file format of a GIF87 standard file
+
+  <img src="img/3.51.png" />
+
+* **Screen Descriptor** comprises a set of attributes that belong to every image in the file. (“屏幕描述符”包括一组属性，这些属性属于文件中的每个图像。)
+
+  <img src="img/3.52.png" />
+
+* **Color Map** is set up in a very simple fashion as in Figure below. However, the actual length of the table equals $2^{(pixel+1)}$ as given in the Screen Descriptor.
+
+* Each image in the file has its own **Image Descriptor**
+
+  <img src="img/3.53.png" />
+
+* If the “interlace” bit is set in the local Image Descriptor, then the rows of the image are displayed in a four-pass sequence
+
+  <img src="img/3.54.png" />
+
+* We can investigate how the file header works in practice by having a look at a particular GIF image. Fig. 3.7 on page is an 8-bit color GIF image, in UNIX, issue the command:
+
+  ```Linux
+  od -c forestfire.gif | head -2
+  ```
+
+   and we see the first 32 bytes interpreted as characters:
+
+  ```
+  G I F 8 7 a \208 \2 \188 \1 \247 \0 \0 \6 \3 \5 
+   J \132 \24 | ) \7 \198 \195 \ \128 U \27 \196 \166 & T
+  ```
+
+* To decipher the remainder of the file header (after “GIF87a”), we use hexadecimal:
+
+  ```Linux
+  od -x forestfire.gif | head -2
+  ```
+
+   with the result
+
+  ```
+   4749 4638 3761 d002 bc01 f700 0006 0305 ae84 187c 2907 c6c3 5c80
+   551b c4a6 2654
+  ```
+
+### JPEG
+
+* **JPEG**: The most important current standard for image compression.
+
+  ​      -- Joint Photographic Experts Group 
+
+* The human vision system has some specific limitations and JPEG takes advantage of these to achieve high rates of compression.
+
+* JPEG allows the user to set a desired level of quality, or compression ratio (input divided by output).
+
+* As an example, Fig. below shows our **forestfire** image, with a quality factor Q=10%.
+
+  * This image is a mere 1.5% of the original size. In comparison, a JPEG image with Q=75% yields an image size 5.6% of the original, whereas a GIF version of this image compresses down to 23.0% of uncompressed image size.
+
+* More on later …
+
+<img src="img/3.55.png" />
+
+### PNG
+
+* **PNG format**: standing for **Portable Network Graphics** — meant to supersede the GIF standard, and extends it in important ways.
+* Special features of PNG files include:
+  1. Support for up to 48 bits of color information — a large increase.
+  2. Files may contain gamma-correction information for correct display of color images, as well as alpha-channel information for such uses as control of transparency.
+  3. The display progressively displays pixels in a 2-dimensional fashion by showing a few pixels at a time over seven passes through each 8 x 8 block of an image.
+
+### TIFF
+
+* **TIFF**: stands for **Tagged Image File Format**(标记的图像文件格式).
+  * Similar to JPEG
+* The support for attachment of additional information (referred to as “tags”) provides a great deal of flexibility.
+  1. The most important tag is a format signifier(指示符): what type of compression etc. is in use in the stored image.
+  2. TIFF can store many different types of image: 1-bit, grayscale, 8-bit color, 24-bit RGB, etc.
+  3. TIFF was originally a lossless format but now a new JPEG tag allows one to opt for JPEG compression.
+  4. The TIFF format was developed by the Aldus Corporation in the 1980's and was later supported by Microsoft.
+
+### EXIF
+
+* **EXIF** (Exchange Image File)(交换映像文件) is an image format for *digital cameras*:
+  1. Compressed EXIF files use the baseline JPEG format.
+  2. A variety of tags (many more than in TIFF) are available to facilitate higher quality printing, since information about the camera and picture-taking conditions (flash, exposure, light source, white balance, type of scene, etc.) can be stored and used by printers for possible color correction algorithms.
+  3. The EXIF standard also includes specification of file format for audio that accompanies digital images. As well, it also supports tags for information needed for conversion to FlashPix (initially developed by Kodak).
+
+### Graphics Animation Files
+
+* A few dominant formats aimed at storing graphics animations (i.e., series of drawings or graphic illustrations) as opposed to video (i.e., series of images).
+* **Difference**: animations are considerably less demanding of resources than video files.
+  1. FLC is an animation or moving picture file format; it was originally created by Animation Pro. Another format, FLI, is similar to FLC.
+  2. GL produces somewhat better quality moving pictures. GL animations can also usually handle larger file sizes.
+  3. Many older formats: such as DL or Amiga IFF files, Apple Quicktime files, as well as animated GIF89 files.
+
+### PS and PDF
+
+* **Postscript** is an important language for typesetting, and many high-end printers have a Postscript interpreter built into them.
+* Postscript is a vector-based picture language, rather than pixel-based: page element definitions are essentially in terms of vectors.
+  1. Postscript includes text as well as vector/structured graphics.
+  2. GL bit-mapped images can be included in output files.
+  3. Encapsulated Postscript files add some additional information  for inclusion of Postscript files in another document.
+  4. Postscript page description language itself does not provide  compression; in fact, Postscript files are just stored as ASCII.
+* Another text + figures language has begun to supersede or at least parallel Postscript: Adobe Systems Inc. includes LZW compression in its Portable Document Format (**PDF**) file format.
+  * PDF files that do not include images have about the same compression ratio, 2:1 or 3:1, as do files compressed with other LZW-based compression tools.
+
+### Some Other Image Formats
+
+* **Microsoft Windows: BMP** 
+  * Major system standard graphics file format for Microsoft Windows, used in Microsoft Paint and other programs 
+  * Many sub-variants within the BMP standard
+* **Microsoft Windows: WMF (Windows Metafile)**
+  * Native vector file format for the Windows operating environment:
+  * Features
+    1. Consist of a collection of GDI (Graphics Device Interface) function calls, also native to the Windows environment: -- e.g., PlayMetaFile() function to render
+    2. Ostensibly device-independent and size unlimited
+
+**Many more... (check** **“save as” in Photoshop)**
 
