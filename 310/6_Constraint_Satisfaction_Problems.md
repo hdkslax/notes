@@ -85,6 +85,13 @@ by looking at the constraints for this problem, we note the following:
 - $X_1+X_2=X_3$ is a **ternary constraint**(三元约束), because it involves 3 variables
 - $X_1+X_2=X_3$ = $\{(1,2,3),(3,4,7),(4,3,7)\}$ 
 - $X_1$ is even is a **unary** constraint, because it involves one variable
+  - **unary constraint** - the constraint only contains one variable
+  - **binary constraint** - the constraint contains two variables
+  - **ternary constraint** - the constraint contains 3 variables
+  - **k-ary constraints** - all different constraints
+    - `all_diff(x2,x3,x7,x8,x10)` , and $x_2 \in \{a\}$, that means `x2 = a`, so we cross $a$ in the domain of x3, x4, x7, x8, x10
+    - If there's another domain that only remain one value after the crossing process, then that value is the solution of that variable.
+    - If all variables are solved by this method, then we are using arc consistency to solve the problem
 - $X_1$ is even $=\{2,4\}$ 
 - looking at the triples in $X_1+X_2=X_3$, the only one where $X_1$ is even is $(4,3,7)$, and so the only solution to his problem is $(X1=4,X2=3,X3=7)$ 
 
@@ -195,6 +202,10 @@ function Revise(csp, X_i, X_j)
 
 **example**. Consider the following CSP with variables A, B, C, and D, and:
 
+* circles are domains
+* edges are constrains on the domains
+* the graph is constraint graph
+
 <img src="img/6.2.png" />
 
 ```
@@ -277,8 +288,10 @@ so some kind of search is usually needed
 intuitively, the idea of CSP **backtracking search** is to repeat the following steps
 
 1. pick an unassigned variable
-2. assign it a value that doesn’t violate any constraints
+   * how to pick the unassigned variable? Depends on your problem. often using heuristic values.
+2. assign it a value that doesn’t violate any constraints with already assigned variables
    - if there is no such value, then backtrack to step 1 and choose a different variable
+   - How to choose a value 
 3. if the all variables are assigned, then a solution has been found; otherwise, go to step 1
 
 **example**: 4-Queens
@@ -302,15 +315,28 @@ so various improvements can be made to basic backtracking, such as:
 
   - in practice, can perform well, but, again, depends on the problem
 
-- interleaving searching and inference: **forward checking**
+- interleaving searching and inference: **forward checking**(向前检查)
 
   - after a variable is assigned in backtracking search, we can rule out all domain values for associated variables that are inconsistent with the assignment
+
+  - also called **constraint propagation**(约束传播)
+
+  - also using heuristic
+
+  - Steps:
+
+    1. pick a variable
+       * depends on the problem, if the problem heuristic give you the hint on picking the next variable, then use it; otherwise, choose *minimum remaining value* (MRV) - pick the variable with the smallest domain.
+    2. choose a value for the variable
+       * heuristic: assign the least-constraining value - the value that removes the fewest number of choices from neighboring variables
+
+    <img src="img/6.4.png" />
 - forward-checking combined with the MRV variable selection heuristic is often a good combination
   
-- rules for choosing what variable to backtrack to
+- **backtracking heuristics** - rules for choosing what variable to backtrack to
 
-  - basic backtracking is sometimes called **chronological backtracking** because it always backtracks to the most recently assigned variable
-  - but it’s possible to do better, e.g. conflict-directed backtracking (see textbook if you are interested)
+  - basic backtracking is sometimes called **chronological backtracking** (按时间顺序回溯) because it always backtracks to the most recently assigned variable
+  - but it’s possible to do better, e.g. **conflict-directed backtracking** (冲突导向的回溯) (see textbook if you are interested)
 
 an interesting fact about these improvements on backtracking search is that they are domain-independent — they can be applied to any CSP
 
@@ -320,11 +346,32 @@ it’s also worth pointing out that fast and memory-efficient implementations ar
 
 - plus, experiments with different combinations of heuristic rules are often needed to find the most efficient variation
 
+### SAT Solving
+
+* every variable only has two values
+
+  <img src="img/6.5.png" />
+
 # Local Search: Min-conflicts
 
 backtracking search solves a CSP by assigning one variable at a time
 
-another approach to solving a CSP is to assign *all* the variables, and then modify this assignment to make it better
+another approach to solving a CSP is to assign *all* the variables, and then modify this assignment to make it better - min-conflicts algorithm
+
+sometimes called *repair algorithm*
+
+It's not a backtracking search algorithm, but a local hill-climbing algorithm, i.e. always find the local `max` or `min` value, here we are finding the `min` value
+
+* steps
+  1. Assign *random* values to all variables
+     * random - does not necessary to be random, if there's some better initialization than random, use it.
+  2. Loop forever until the solution is good enough
+     * re-assign the variable that results in the greatest decrease in constraint conflicts
+     * anything about hill-climbing algorithm can be used here
+
+This algorithm's goal is to return the fewest conflicts, it may not always return solutions that have no conflicts.
+
+N queens, N ~ 3 million in < 6.0 s
 
 this is a kind of local search on CSPs, and for some problems it can be extremely effective
 
@@ -336,9 +383,10 @@ example: 4-queens problem
 
 local search using min-conflicts can be applied to any CSP as follows:
 
-```
+```pseudocode
 function Min-Conflicts(csp, max_steps)
-    returns: solution, or failure
+    returns: solution, or failure 
+    (failure here doesn't mean there's no solution, but not able to find one. Notice that hill-climbing algorithm is incomplete)
     Inputs: csp, a constraint satisfaction problem
             max_steps, number of steps allowed before giving up
 
@@ -353,8 +401,42 @@ end
 
 the CONFLICTS functions returns the count of the number of variables in the rest of the assignment that violate a constraint when var=v
 
+<img src="img/6.6.png" />
+
+* It is possible to pick $x_4$ again, which increase $f$, so we should specify that don't pick the last variable you pick.
+* you may find a solution or get stuck in a dead end (no moves can result in a smaller $f$), then you need to start this algorithm again.
+* if it takes too long to find a solution, it doesn't mean no solution, but the solution is hard to find ot there are very few solutions.
+
 a tailored version of Min-Conflicts can solve the n-queens problem for n=3 million in less than a minute (on 1990s computers!)
 
 - this is was a surprise — it’s not obvious that min-conflicts will work so well on this problem
 
-we will not cover anything from section 6.5
+There are variations of min conflicts where is sometimes increases the number of conflicts.
+
+
+
+### Variations on CSPs
+
+##### Infinite domains
+
+e.g. $\R$ real numbers
+
+$x^2 - x -5 = 0$ 
+
+e.g. $n$ variables, $x_1, x_2, x_3, ..., x_n$ all in $\R$, only linear constraints
+
+$5x_1 - 3x_4 \le x_2 + 5x_3$
+
+##### put weights on constraints
+
+higher weight -> worse to violate
+
+COP = constraint optimization problem 约束优化问题
+
+##### Languages for CSPs
+
+constraint libraries, e.g. python
+
+CLP = constraint logic programming
+
+e.g. Prolog (a programming language people think it's just a toy but not useful)
