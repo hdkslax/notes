@@ -1,6 +1,6 @@
 ### Introduction
 
-###### Java
+###### Java 
 
 JVM - Java Virtual Machine
 
@@ -8,8 +8,8 @@ JVM - Java Virtual Machine
 
 ```java
 public class MyFirstProgram {
-    public static void main(String[] args){
-        System.out.println("Hello World!");
+    public static void main(String[] args1){
+        System.out.println("Hello World!"); // 这行代码是为了打印出HelloWorld！
     }
 }
 ```
@@ -24,14 +24,17 @@ public class MyFirstProgram {
 
 `public static void main` - main function的标准写法
 
-`main` - 必须至少有一个method的名字叫`main`
+`main` - 每个project里有且只有一个method的名字叫`main`
 
-`("Hello World!")` - argument
+`("Hello World!")` - argument 参数
+
+
 
 ###### Commenting in Java
 
 ```java
 // 单行注释
+
 /*
 	多行注释
 */
@@ -41,17 +44,19 @@ public class MyFirstProgram {
 
 ###### 命名
 
-* 不能以数字开头
-* 不能有空格
-* 区分大小写
+* 不能以数字开头 - 6josds不对的
+* 不能有空格： FirstProgram(驼峰命名法)，first_program (下划线命名法) 
+* 区分大小写：FirstProgram 和 firstprogram 是不一样的变量
 
-###### 其他知识点
+
+
+###### 转义字符
 
 `\n` - 字符串中的换行符
 
 `\t` - 制表符
 
-`\r` - 光标重回本章开头
+`\r` - 光标重回本行开头
 
 `\\` - 打印出`\`
 
@@ -78,11 +83,11 @@ public class MyFirstProgram {
 
 ###### 三种打印方法
 
-`System.out.println()` - 打印一行内容，打印完换行
+`System.out.println()` - 打印一行内容，打印完换行 ln - line
 
 `System.out.print()` - 打印一行内容，打印完不换行
 
-`System.out.printf()` - 格式化输出
+`System.out.printf()` - 格式化输出 f - format
 
 ```java
 public class MyFirstProgram {
@@ -127,21 +132,23 @@ public class Addition {
 
 ###### Java 数据类型
 
-`boolean`
+`boolean` - True / False
 
-`byte`
+`byte` 字节
 
-`char`
+`char` 字符
 
-`short`
+`short` - short int, 2 bytes
 
-`int`
+`int` - int, 4 bytes
 
-`long`
+`long` - long int, 8 bytes
 
-`float`
+`float`  小数，精度 - 4 bytes
 
-`double`
+`double` 小数 - 8 bytes
+
+
 
 ###### 变量 Variable
 
