@@ -1,4 +1,4 @@
-### Introduction
+### 1 - Introduction
 
 ###### Java 
 
@@ -83,9 +83,9 @@ public class MyFirstProgram {
 
 ###### 三种打印方法
 
-`System.out.println()` - 打印一行内容，打印完换行 ln - line
+`System.out.println()` - 打印一行内容换行 ln - line
 
-`System.out.print()` - 打印一行内容，打印完不换行
+`System.out.print()` - 打印一行内容不换行
 
 `System.out.printf()` - 格式化输出 f - format
 
@@ -235,9 +235,9 @@ public class Comparison {
 
 
 
-### Classes, Objects, Methods, String and Math Class
+### 2 - Classes, Objects, Methods, String and Math Class
 
-###### Class
+###### Class 类
 
 ```java
 // Account.java
@@ -254,6 +254,20 @@ public class Account {
               return name; // return value of name to caller
       }
 }
+
+int number1;
+number1 = 45;
+
+public class FirstProgram {
+    public static void main(String[] args) {
+        Account a1 = new Account();
+
+        a1.setName("customer1");
+
+        System.out.println(a1.getName());
+
+    }
+}
 ```
 
 **method header** - the first line of each method declaration.
@@ -262,7 +276,7 @@ public class Account {
 
 `void setName()` - 说明 method setName() return nothing
 
- `(String name)` - parameter 参数，多个参数用逗号分开
+ `(String name, int accountNumber)` - parameter 参数，多个参数用逗号分开
 
 
 
@@ -434,3 +448,52 @@ Reference Types - 首字母大写
 * 表示一个Object
 * `Scanner input = new Scanner(System.in);`
 * Creates an object of class Scanner, then assigns to the variable input a **reference** to that Scanner object.
+
+
+
+### 3 - Selection
+
+`Algorithm` - a procedure for solving a problem in terms of 
+
+	1. the actions to execute.
+ 	2. the order in which these actions execute.
+
+例:
+
+食谱处理：红烧排骨
+
+1、锅内放水烧开，放入斩件排骨[氽烫]至出血水，捞起洗净后沥净水备用。
+
+2、锅内放油，烧至六成热时爆香姜片，放入排骨煸炒到金黄微焦。
+
+3、依次放入1汤匙花雕酒、2汤勺草菇老抽、1勺生抽、1汤勺白糖，炒匀，放入八角、桂皮，再倒入能没过排骨的开水，调中火焖15分钟，放入盐炒匀。
+
+4、开大火收汁，收到汤汁将干时，出锅摆盘撒上葱花即可。
+
+`program control` - specifying the order in which statements (actions) execute in a program. 
+
+
+
+`Pseudocode` - an informal language (eg, English) that helps programmers develop algorithms without having to worry about the strict details of programming language (eg, Java) language syntax.
+
+* Pseudocode does not execute on computers
+* It’s helps programmers to think out a program before attempting to write it in a programming language. 
+
+例：
+
+```pseudocode
+Set total to zero
+Set grade counter to one
+
+While grade counter is less than or equal to ten
+Prompt the user to enter the next grade
+Input the next grade
+Add the grade into the total
+Add one to the grade counter
+
+Set the class average to the total divided by ten
+Print the class average
+```
+
+###### Control Structures
+
