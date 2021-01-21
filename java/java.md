@@ -497,3 +497,211 @@ Print the class average
 
 ###### Control Structures
 
+`Sequential Execution` - typically, statements in a program are executed one after the other in the order in which they’re written.
+
+`Transfer of Control` - statements that enable programmers to specify the next statement to execute is not necessarily the next one in sequence.  
+
+`Sequence Structure` - the computer executes Java statements one after the other in the order in which they’re written.
+
+* built into Java.
+
+###### UML Activity Diagram
+
+* UML activity diagram illustrates a typical sequence structure in which two calculations are performed in order.
+* The diagram models the workflow of a portion of a software system.
+
+例：
+
+<img src="img/3.png" />
+
+###### UML components
+
+* rectangles - action-state symbols 
+* diamonds - conditions
+* small circles
+  * solid circle at the top - initial state (start)
+  * solid circle surrounded by a hollow circle at the bottom - final state
+* transition arrows - represent the flow of the activity
+* dotted line - connects each note with the element it describes. 
+
+###### Selection Statements
+
+`if` 
+
+* the condition is true - performs an action
+* the condition is false - skip it
+
+```pseudocode
+If student’s grade is greater than or equal to 60
+Print “Passed”
+```
+
+```java
+if (studentGrade >= 60) {
+    System.out.println("Passed"); 
+}
+```
+
+<img src="img/4.png" />
+
+* 注意：不要忘记在箭头上写条件
+
+`if...else`
+
+* the condition is true - performs the action under `if`
+* the condition is false - performs the action under `else`
+
+```pseudocode
+If student’s grade is greater than or equal to 60
+      Print “Passed”
+Else
+      Print “Failed”
+```
+
+```java
+if (grade >= 60) {
+   System.out.println("Passed"); 
+}
+else {
+   System.out.println("Failed");
+}
+```
+
+练习：画出UML
+
+```pseudocode
+If student’s grade is greater than or equal to 90
+      Print “A”
+else
+      If student’s grade is greater than or equal to 80
+            Print “B”
+      else
+            If student’s grade is greater than or equal to 70
+                  Print “C”
+            else
+                  If student’s grade is greater than or equal to 60
+                        Print “D”
+                  else
+                        Print “F”
+
+```
+
+```java
+if (studentGrade >= 90) {
+       System.out.println("A"); 
+} else {
+   if (studentGrade >= 80) {
+        System.out.println("B");
+   } else {
+      if (studentGrade >= 70) {
+         System.out.println("C");
+      } else {
+           if (studentGrade >= 60) {
+                System.out.println("D");
+           } else {
+                System.out.println("F");
+           }
+       }
+   }
+}
+```
+
+完整例子：
+
+```java
+//Student.java
+// Student class that stores a student name and average.
+public class Student {
+           private String name;
+           private double averag
+          // constructor initializes instance variables
+         public Student(String name, double average) {
+                    this.name = na
+                  // validate that average is > 0.0 and <= 100.0; otherwise,
+                 // keep instance variable average's default value (0.0)
+                if (average > 0.0) {
+                         if (average <= 100.0) {
+                                  this.average = average; // assign to instance variable
+                          }
+                   }
+
+          // sets the Student's name
+         public void setName(String name) {
+                      this.name = name;
+
+        // retrieves the Student's name
+        public String getName() {
+                      return name;
+        }
+         // sets the Student's average
+        public void setAverage(double studentAverage) {
+                 // validate that average is > 0.0 and <= 100.0; otherwise,
+                 // keep instance variable average's current value
+                if (average > 0.0) {
+                            if (average <= 100.0) {
+                                       this.average = average; // assign to instance variable
+                            }
+                }
+    }
+
+    // retrieves the Student's average
+    public double getAverage() {
+               return average;
+    }
+    // determines and returns the Student's letter grade
+	public String getLetterGrade() {
+	          String letterGrade = ""; // initialized to empty String
+	        if (average >= 90.0) {
+	        	letterGrade = "A";
+	        }
+	        else if (average >= 80.0) {
+	            letterGrade = "B";
+            }
+            else if (average >= 70.0) {
+                letterGrade = "C";
+            }
+            else if (average >= 60.0) {
+                letterGrade = "D";
+            }
+            else {
+                letterGrade = "F";
+            }
+            return letterGrade;
+        }
+}
+```
+
+```java
+// Fig. 4.5: StudentTest.java
+// Create and test Student objects.
+public class StudentTest {
+            public static void main(String[] args) {
+                      Student account1 = new Student("Jane Green", 93.5);
+                      Student account2 = new Student("John Blue", 72.75);
+
+                      System.out.printf("%s's letter grade is: %s%n",
+                      account1.getName(), account1.getLetterGrade());
+                     System.out.printf("%s's letter grade is: %s%n",
+                     account2.getName(), account2.getLetterGrade());
+           }
+}
+```
+
+`switch` - performs one of many different actions, depending on the value of an expression.
+
+
+
+###### Block
+
+**Block** - 在`{}`中间的statemens是一个block.
+
+```java
+if (grade >= 60) {
+   System.out.println("Passed");
+}
+else {
+   System.out.println("Failed");
+   System.out.println("You must take this course again.");
+}
+```
+
