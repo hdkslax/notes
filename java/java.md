@@ -309,7 +309,9 @@ public class AccountTest {
              // display the name stored in object myAccount
             System.out.printf("Name in object myAccount is:%n%s%n",
             myAccount.getName());
-
+			int number1; // declaration 声明
+           number1 = 45; // assignment 赋值
+           int number1 = 45;
       }
 }
 
@@ -453,9 +455,12 @@ Reference Types - 首字母大写
 
 ### 3 - Selection
 
-`Algorithm` - a procedure for solving a problem in terms of 
+###### Algorithm
 
-	1. the actions to execute.
+`Algorithm算法` - a procedure for solving a problem in terms of 
+
+1. the actions to execute.
+
  	2. the order in which these actions execute.
 
 例:
@@ -689,6 +694,27 @@ public class StudentTest {
 
 `switch` - performs one of many different actions, depending on the value of an expression.
 
+```java
+Scanner input = new Scanner(System.in);
+        int n = input.nextInt();
+        switch (n){
+            case 90:
+                System.out.println("A");
+                break;
+            case 80:
+                System.out.println("B");
+                break;
+            case 70:
+                System.out.println("C");
+                break;
+            case 60:
+                System.out.println("D");
+                break;
+            default:
+                System.out.println("F");
+        }
+```
+
 
 
 ###### Block
@@ -702,6 +728,367 @@ if (grade >= 60) {
 else {
    System.out.println("Failed");
    System.out.println("You must take this course again.");
+}
+```
+
+
+
+### 4 - Repetition
+
+##### Iteration Statements
+
+###### while
+
+* The loop executes as long as the condition is true
+* perform the actions in the block zero or more times
+
+```pseudocode
+“While there are more items on my shopping list
+   Purchase next item and cross it off my list”
+```
+
+```java
+int product = 3;
+
+while (product <= 100) {
+       product = 3 * product;
+}
+```
+
+<img src="img/6.png" />
+
+* `merge `- joins 2 flows of activity into one.
+  * e.g., diagram above, the merge symbol joins the transitions from the initial state and from the action state. 
+
+###### Counter-controlled Iteration
+
+完整例子： 
+
+```pseudocode
+Set total to zero
+Set grade counter to one
+
+While grade counter is less than or equal to ten
+	Prompt the user to enter the next grade
+	Input the next grade
+	Add the grade into the total
+	Add one to the grade counter
+	
+Set the class average to the total divided by ten
+Print the class average
+```
+
+```java
+// ClassAverage.java
+// Solving the class-average problem using counter-controlled iteration. 
+import java.util.Scanner; // program uses class Scanner 
+public class ClassAverage { 
+    public static void main(String[] args) { 
+        // create Scanner to obtain input from command window 
+        Scanner input = new Scanner(System.in); 
+        // initialization phase 
+        int total = 0;  // initialize sum of grades entered by the user
+        int gradeCounter = 1; // initialize # of grade to be entered next
+        // processing phase uses counter-controlled iteration 
+        while (gradeCounter <= 10) { // loop 10 times 
+            System.out.print("Enter grade: "); // prompt 
+            int grade = input.nextInt(); // input next grade 
+            total = total + grade; // add grade to total 
+            gradeCounter = gradeCounter + 1; // increment counter by 1
+        }
+        // termination phase 
+        int average = total / 10; // integer division yields integer result 
+        // display total and average of grades 
+        System.out.printf("%nTotal of all 10 grades is %d%n", total); 
+        System.out.printf("Class average is %d%n", average); 
+    }
+}
+```
+
+###### Sentinel-Controlled Iteration
+
+* Sentinel-controlled repetition is sometimes called **indefinite repetition** because it is not known in advance how many times the loop will be executed. 
+* It is a repetition procedure for solving a problem by using a **sentinel value** (also called a signal value, a dummy value or a flag value) to indicate "end of data entry".
+
+例：
+
+a run of the class-average program might process a stream of inputs such as 95, 96, 75, 74, 89 and **–1**.
+
+The program would then compute and print the class average for the grades 95, 96, 75, 74 and 89. 
+
+Since **–1** is the sentinel value, it should not enter into the averaging calculation.
+
+```pseudocode
+Initialize total to zero 
+Initialize counter to zero 
+
+Prompt the user to enter the first grade 
+Input the first grade (possibly the sentinel) 
+
+While the user has not yet entered the sentinel 
+	Add this grade into the running total 
+	Add one to the grade counter 
+	Prompt the user to enter the next grade 
+	Input the next grade (possibly the sentinel) 
+
+	If the counter is not equal to zero 
+		Set the average to the total divided by the counter 
+		Print the average 
+	Else 
+		Print “No grades were entered”
+```
+
+```java
+// ClassAverage.java
+// Solving the class-average problem using sentinel-controlled iteration. 
+import java.util.Scanner; // program uses class Scanner 
+
+public class ClassAverage { 
+	public static void main(String[] args) { 
+		// create Scanner to obtain input from command window 
+		Scanner input = new Scanner(System.in); 
+		// initialization phase 
+		int total = 0; // initialize sum of grades 
+		int gradeCounter = 0; // initialize # of grades entered so far 
+
+		// processing phase 
+		// prompt for input and read grade from user
+		int grade = input.nextInt();     
+
+		// loop until sentinel value read from user   
+		while (grade != -1) { 
+			total = total + grade; // add grade to total 
+			gradeCounter = gradeCounter + 1; // increment counter 
+
+			// prompt for input and read next grade from user
+			System.out.print("Enter grade or -1 to quit: ");
+			grade = input.nextInt(); 
+		} 
+
+			// termination phase 
+			// if user entered at least one grade… 
+			if (gradeCounter != 0) { 
+				// use number with decimal point to calculate average of grades
+				double average = (double) total / gradeCounter;     
+
+				// display total and average (with two digits of precision) 
+				System.out.printf("%nTotal of the %d grades entered is %d%n", gradeCounter, total); 
+				System.out.printf("Class average is %.2f%n", average); 
+			} 
+			else { // no grades were entered, so output appropriate message 
+				System.out.println("No grades were entered"); 
+			} 
+	} 
+}
+```
+
+<img src="img/7.png" />
+
+###### Nested Controls in a while Statement
+
+```pseudocode
+Initialize passes to zero 
+Initialize failures to zero 
+Initialize student counter to one 
+
+While student counter is less than or equal to 10 
+	Prompt the user to enter the next exam result 
+	Input the next exam result 
+
+	If the student passed 
+		Add one to passes 
+	Else 
+		Add one to failures 
+		
+	Add one to student counter 
+	
+	Print the number of passes 
+	Print the number of failures 
+
+	If more than eight students passed 
+		Print “Bonus to instructor!”
+```
+
+```java
+//Analysis.java 
+// Analysis of examination results using nested control statements. 
+import java.util.Scanner; // class uses class Scanner 
+
+public class Analysis { 
+	public static void main(String[] args) { 
+		// create Scanner to obtain input from command window 
+		Scanner input = new Scanner(System.in); 
+
+		// initializing variables in declarations
+		int passes = 0;
+		int failures = 0;
+		int studentCounter = 1;
+		// process 10 students using counter-controlled loop 
+		while (studentCounter <= 10) { 
+			// prompt user for input and obtain value from user 
+			System.out.print("Enter result (1 = pass, 2 = fail): "); 
+			int result = input.nextInt(); 
+		
+            // if …else is nested in the while statement
+			if (result == 1) {
+                passes = passes + 1;
+            } else {
+                failures = failures + 1;
+            }
+            // increment studentCounter so loop eventually terminates
+            studentCounter = studentCounter + 1;
+        }
+        
+        // termination phase; prepare and display results
+        System.out.printf("Passed: %d%nFailed: %d%n", passes, failures);
+        // determine whether more than 8 students passed
+        if (passes > 8) {
+            System.out.println("Bonus to instructor!");
+        }
+    }
+}
+```
+
+###### Compound Assignment Operators
+
+`+=` - `c = c + 3` 和 `c += 3` 是一样的。
+
+`+=, -=, *=, /=, %=`
+
+###### Increment and Decrement Operators
+
+1. Unary increment operator, `++` 
+
+2. Unary decrement operator, `--`
+
+**prefix increment/decrement**
+
+**postfix increment/decrement**
+
+```java
+// Increment.java 
+// Prefix increment and postfix increment operators.
+
+public class Increment {
+    public static void main(String[] args) {
+        // demonstrate postfix increment operator
+        int c = 5;
+        System.out.printf("c before postincrement: %d%n", c); // prints 5
+        System.out.printf("    postincrementing c: %d%n", c++); // prints 5
+        System.out.printf(" c after postincrement: %d%n", c); // prints 6
+        System.out.println(); // skip a line
+        // demonstrate prefix increment operator
+        c = 5;
+        System.out.printf(" c before preincrement: %d%n", c); // prints 5
+        System.out.printf("     preincrementing c: %d%n", ++c); // prints 6 
+        System.out.printf("  c after preincrement: %d%n", c); // prints 6
+    }
+}
+```
+
+`do...while`
+
+`for`
+
+* perform the actions in the block zero or more times
+
+```java
+//WhileCounter.java
+// Counter-controlled iteration with the while iteration statement.
+public class WhileCounter {
+    public static void main(String[] args) {
+        int counter = 1; // declare and initialize control variable
+        while (counter <= 10) { // loop-continuation condition 
+            System.out.printf("%d ", counter);
+            ++counter; // increment control variable
+        }
+        System.out.println();
+    } 
+}
+
+//ForCounter.java
+// Counter-controlled iteration with the for iteration statement.
+public class ForCounter {
+    public static void main(String[] args) {
+        // for statement header includes initialization,
+        // loop-continuation condition and increment
+        for (int counter = 1; counter <= 10; counter++) {
+            System.out.printf("%d ", counter);
+        }
+        System.out.println();
+    }
+}
+```
+
+<img src="img/8.png" />
+
+```pseudocode
+for (initialization; loopContinuationCondition; increment) {
+           Group of Java statements;
+}
+```
+
+The **increment** expression in a **for** acts as if it were a standalone
+
+statement at the end of the **for’s** body. 
+
+So, the following expressions are equivalent increment expressions in a for statement.
+
+```java
+counter = counter + 1
+counter += 1
+++counter
+counter++
+```
+
+```java
+for (int j = x; j <= 4 * x * y; j += y / x)
+for (int j = 2; j <= 80; j += 5)
+// They are equivalent
+```
+
+<img src="img/9.png" />
+
+`enhanced for`
+
+
+
+###### Application: Compound-Interest Calculations
+
+A person invests $1,000 in a savings account yielding 5% interest. 
+
+Assuming that all the interest is left on deposit, calculate and print the amount of money in the account at the end of each year for 10 years. 
+
+Use the following formula to determine the amounts:
+$$
+a = p(1 + r)^n
+$$
+**p** is the original amount invested (i.e., the principal)
+
+**r** is the annual interest rate (e.g., use 0.05 for 5%)
+
+**n** is the number of years
+
+**a** is the amount on deposit at the end of the nth year
+
+```java
+//Interest.java 
+//Compound-interest calculations with for. 
+
+public class Interest {
+    public static void main(String[] args) {
+        double principal = 1000.0; // initial amount before interest 
+        double rate = 0.05; // interest rate
+        // display headers 
+        System.out.printf("%s%20s%n", "Year", "Amount on deposit"); 
+        // calculate amount on deposit for each of ten years
+        for (int year = 1; year <= 10; ++year) {
+            // calculate new amount on deposit for specified year
+            double amount = principal * Math.pow(1.0 + rate, year);
+            // display the year and the amount
+            System.out.printf("%4d%,20.2f%n", year, amount);
+        }
+    }
 }
 ```
 
