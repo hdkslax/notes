@@ -733,7 +733,7 @@ else {
 
 
 
-### 4 - Repetition
+### 4 5 - Repetition
 
 ##### Iteration Statements
 
@@ -902,11 +902,11 @@ While student counter is less than or equal to 10
 		
 	Add one to student counter 
 	
-	Print the number of passes 
-	Print the number of failures 
+Print the number of passes 
+Print the number of failures 
 
-	If more than eight students passed 
-		Print “Bonus to instructor!”
+If more than eight students passed 
+	Print “Bonus to instructor!”
 ```
 
 ```java
@@ -931,7 +931,7 @@ public class Analysis {
 		
             // if …else is nested in the while statement
 			if (result == 1) {
-                passes = passes + 1;
+                passes = passes + 1; // passes += 1; passes++;
             } else {
                 failures = failures + 1;
             }
@@ -966,6 +966,12 @@ public class Analysis {
 **postfix increment/decrement**
 
 ```java
+int counter = 0;
+System.out.println(counter++);// postfix increment
+System.out.println(++counter);// prefix increment
+```
+
+```java
 // Increment.java 
 // Prefix increment and postfix increment operators.
 
@@ -986,9 +992,26 @@ public class Increment {
 }
 ```
 
-`do...while`
+###### do...while
 
-`for`
+```java
+	do { 
+			// prompt user for input and obtain value from user 
+			System.out.print("Enter result (1 = pass, 2 = fail): "); 
+			int result = input.nextInt(); 
+		
+            // if …else is nested in the while statement
+			if (result == 1) {
+                passes = passes + 1; // passes += 1; passes++;
+            } else {
+                failures = failures + 1;
+            }
+            // increment studentCounter so loop eventually terminates
+            studentCounter = studentCounter + 1;
+     } while (studentCounter <= 10) 
+```
+
+###### for
 
 * perform the actions in the block zero or more times
 
@@ -1007,6 +1030,7 @@ public class WhileCounter {
 }
 
 //ForCounter.java
+// 已知循环体运行次数时，一般选择for loop
 // Counter-controlled iteration with the for iteration statement.
 public class ForCounter {
     public static void main(String[] args) {
@@ -1042,14 +1066,13 @@ counter++
 ```
 
 ```java
+int x = 2, y = 10;
 for (int j = x; j <= 4 * x * y; j += y / x)
 for (int j = 2; j <= 80; j += 5)
 // They are equivalent
 ```
 
 <img src="img/9.png" />
-
-`enhanced for`
 
 
 
