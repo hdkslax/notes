@@ -1,10 +1,15 @@
-print("""Hello
-	human""")
+# Fortune Cookie Generator
+# Author: XXX
+# Date: Jan. 24, 2021
+# Generates a random fortune
 
-print(type("beep"))
-print(type("5"))
-print(type(5))
+import random
 
-print("Take", "5")
-print("Take 5")
-print(555, 555)
+# Create a list
+fortunes = ["have great success.", "find love.", "become rich."]
+
+# Select random
+random_fortune = random.choice(fortunes)
+
+# Output
+print("You will " + random_fortune)

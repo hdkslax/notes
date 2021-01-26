@@ -715,7 +715,7 @@ Scanner input = new Scanner(System.in);
         }
 ```
 
-
+<img src="img/11.png" />
 
 ###### Block
 
@@ -733,7 +733,7 @@ else {
 
 
 
-### 4 5 - Repetition
+### 4 5 6 - Repetition
 
 ##### Iteration Statements
 
@@ -1011,12 +1011,21 @@ public class Increment {
      } while (studentCounter <= 10) 
 ```
 
+<img src="img/10.png" />
+
+```java
+while (input.hasNext()){}
+// <ctrl> + d to stop inputing
+```
+
+
+
 ###### for
 
 * perform the actions in the block zero or more times
 
 ```java
-//WhileCounter.java
+// WhileCounter.java
 // Counter-controlled iteration with the while iteration statement.
 public class WhileCounter {
     public static void main(String[] args) {
@@ -1115,3 +1124,336 @@ public class Interest {
 }
 ```
 
+
+
+练习
+
+```java
+//AutoPolicy.java
+//Class that represents an auto insurance policy.
+public class AutoPolicy {
+
+    private int accountNumber; // policy account number
+    private String makeAndModel; // car that the policy applies to
+    private String state; // two-letter state abbreviation
+
+
+    // constructor
+    public AutoPolicy(int accountNumber, String makeAndModel, String state) {
+        this.accountNumber = accountNumber;
+        this.makeAndModel = makeAndModel;
+        this.state = state;
+    }
+
+    // sets the accountNumber
+    public void setAccountNumber(int accountNumber) {
+        this.accountNumber = accountNumber;
+    }
+    // returns the accountNumber
+    public int getAccountNumber() {
+        return accountNumber;
+    }
+    // sets the makeAndModel
+    public void setMakeAndModel(String makeAndModel) {
+        this.makeAndModel = makeAndModel;
+    }
+    // returns the makeAndModel
+    public String getMakeAndModel() {
+        return makeAndModel;
+    }
+
+    // sets the state
+    public void setState(String state) {
+        this.state = state;
+    }
+    // returns the state
+    public String getState() {
+        return state;
+    }
+
+    // predicate method returns whether the state has no-fault insurance
+    public boolean isNoFaultState(){
+        boolean noFaultState;
+        // determine whether state has no-fault auto insurance
+        switch (getState()) { // get AutoPolicy object's state abbreviation
+            case "MA": case "NJ": case "NY": case "PA":
+                noFaultState = true;
+                break;
+                default:
+                    noFaultState = false;
+                    break;
+        }
+        return noFaultState;
+    }
+
+}
+
+
+```
+
+```java
+//AutoPolicyTest.java
+// Demonstrating Strings in switch.
+public class AutoPolicyTest {
+    public static void main(String[] args) {
+        // create two AutoPolicy objects
+        AutoPolicy policy1 = new AutoPolicy(11111111, "Toyota Camry", "NJ");
+        AutoPolicy policy2 = new AutoPolicy(22222222, "Ford Fusion", "ME");
+        // display whether each policy is in a no-fault state
+        policyInNoFaultState(policy1);
+        policyInNoFaultState(policy2);
+
+    }
+    // method that displays whether an AutoPolicy
+    // is in a state with no-fault auto insurance
+    public static void policyInNoFaultState(AutoPolicy policy) {
+        System.out.println("The auto policy:");
+        System.out.printf(
+                "Account #: %d; Car: %s;%nState %s %s a no-fault state%n%n",
+                policy.getAccountNumber(), policy.getMakeAndModel(),
+                policy.getState(),
+                (policy.isNoFaultState() ? "is": "is not"));
+    }
+}
+```
+
+
+
+###### Break vs Continue
+
+* `break` - 跳过本层循环
+* `continue` - 跳过本次循环
+
+```java
+// break
+for (count = 1; count <= 10; count++) { // loop 10 times
+
+            if (count == 5) {
+                     break; // terminates loop if count is 5
+            }
+
+            System.out.printf("%d ", count);
+
+}
+
+
+// continue
+for (count = 1; count <= 10; count++) { // loop 10 times
+
+            if (count == 5) {
+                     continue; // skip remaining code in loop body if count is 5
+            }
+
+            System.out.printf("%d ", count);
+
+}
+```
+
+###### Logical Operator
+
+`&&` and
+
+`||` or
+
+`&` Boolean logical and
+
+`|` Boolean logical or
+
+`^` Boolean logical exclusive or
+
+`!` logical negation operator
+
+```java
+if (gender == FEMALE && age >= 65) {
+         ++seniorFemales;
+}
+
+if ((semesterAverage >= 90) || (finalExam >= 90)) {
+       System.out.println ("Student grade is A");
+}
+
+(gender == 1) & (age >= 65)
+(birthday == true) | (++age >= 65)
+
+    
+if (! (grade == sentinelValue)) {
+      System.out.printf("The next grade is %d%n", grade);
+}
+
+```
+
+
+
+### 7 - Method 1
+
+###### divide and conquer 
+
+* Classes and methods help you modularize a program by separating its tasks into self-contained units.
+* The statements in the method bodies are written only once. （**Avoid Repeating Code**）By modularizing the programs, we can reuse methods that consists of the same codes across multiple programs. 
+* The statements are hidden from other methods and can be **reused** from several locations in a program - Using existing classes and methods as building blocks to create new programs.
+* **divide-and-conquer approach** makes program development more manageable by constructing programs from small, simple pieces.
+
+###### Java Application Programming Interface (Java API) 
+
+Java API - predefined methods and classes. 
+
+Java API contain methods:
+
+* Common mathematical calculations
+* String manipulations, character manipulations
+* Input / output operations
+* Database operations
+* Networking operations
+* File processing
+* Error checking
+
+###### Method calls
+
+method call - invoke a method
+
+###### Hierarchical Relationship 
+
+
+
+<img src="img/12.png" />
+
+A **boss** (the caller) asks a **worker** (the called method) to perform a task and report back (return) the results after completing the task. 
+
+The **boss** method does not know how the **worker** method performs its designated tasks. 
+
+The **worker** may also call other worker methods, unbeknown to the **boss**. 
+
+
+
+###### static Methods
+
+**static/class method** - a method performs a task that does not depend on an object.
+
+Classes often contain convenient static methods to perform common tasks.
+
+```java
+import java.lang.Math
+double amount = principal * Math.pow(1.0 + rate, year);
+
+```
+
+**declare a method as static** 
+
+place the keyword **static** before the return type in the method’s declaration. 
+
+**call the class’s static methods**
+
+```java
+ClassName.methodName(arguments)
+```
+
+```java
+Math.sqrt(900.0);
+System.out.println(Math.sqrt(900.0));
+```
+
+###### Math Class Methods
+
+`abs(x)`
+
+`cell(x)` - cell(3.14) = 4
+
+`floor(x)` - floor(3.14) = 3
+
+`sqrt(x)`
+
+`exp(x)` - e^3
+
+`log(x)` 
+
+`max(x,y)`
+
+`min(x,y)`
+
+`pow(x)`
+
+`sin(x)`
+
+`cos(x)`
+
+`tan(x)`
+
+###### static Variables
+
+**static/class variables** - variables for which each of a class does not need its own separate copy.
+
+* When objects of a class containing static variables are created, all the objects of that class share one copy of the static variables. 
+
+```java
+private static double salary;
+```
+
+* Static variables can be accessed by calling with the class name `ClassName.VariableName`.
+
+```java
+Math.PI 
+Math.E
+```
+
+###### Why `main` static?
+
+When you execute the Java Virtual Machine (JVM) with the java command, the JVM attempts to invoke the main method of the class you specify.
+
+Declaring main as static allows the JVM to invoke main without creating an instance of the class.
+
+In any Java program, the `main()` method is the starting point from where compiler starts program execution. So, the compiler needs to call the main() method.
+
+If the `main()` is allowed to be non-static, then while calling the `main()` method JVM has to instantiate its class.
+
+###### Methods with Multiple Parameters
+
+```java
+//MaximumFinder.java
+// Programmer-declared method maximum with three double parameters.
+import java.util.Scanner;
+
+public class MaximumFinder {
+	public static void main(String[] args) {
+        // create Scanner for input from command window
+        Scanner input = new Scanner(System.in);
+        // prompt for and input three floating-point values
+        System.out.print("Enter three floating-point values separated by spaces: ");
+        double number1 = input.nextDouble(); // read first double
+        double number2 = input.nextDouble(); // read second double
+        double number3 = input.nextDouble(); // read third double
+        //determine the maximum value
+        double result = maximum(number1, number2, number3);
+        // display maximum value
+        System.out.println("Maximum is: " + result);
+    }
+    //returns the maximum of its three double parameters
+    public static double maximum(double x, double y, double z) {
+        double maximumValue = x; // assume x is the largest to start
+        //determine whether y is greater than maximumValue
+        if (y > maximumValue) {
+            maximumValue = y;
+        }
+        // determine whether z is greater than maximumValue
+        if (z > maximumValue) {
+            maximumValue = z;
+        }
+        return maximumValue;
+    }
+}
+```
+
+###### Method-Call Stack 
+
+**Stack** - Last In First Out, also called **program-execution stack**
+
+**Pushing**
+
+**Popping**
+
+**Method-Call Stack** 
+
+**Stack Frames**
+
+**Local Variables** - That stack frame exists as long as the called method is active.
+
+ **Stack Overflow** - The amount of memory in a computer is finite. If more method calls with their activation records are stored on the method-call stack, a fatal error known as stack overflow occurs. This typically is caused by infinite recursion.
