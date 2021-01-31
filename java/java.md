@@ -1457,3 +1457,121 @@ public class MaximumFinder {
 **Local Variables** - That stack frame exists as long as the called method is active.
 
  **Stack Overflow** - The amount of memory in a computer is finite. If more method calls with their activation records are stored on the method-call stack, a fatal error known as stack overflow occurs. This typically is caused by infinite recursion.
+
+### 8 - Method 2
+
+###### Argument Promotion
+
+converting an argument’s value to the type that the method expects to receive in its corresponding parameter.
+
+例：
+
+```java
+// Math.sqrt(4) 要求参数是double类型，但输入整数int类型也可以。先自动将int转换为double，再将转换完的double类型传入
+System.out.println(Math.sqrt(4)); // 输出2.0
+```
+
+此方法可能导致编译错误 (compilation error)
+
+必须遵守以下规则：
+
+* 数据类型转换时，不能造成数据丢失，短->长
+
+  * 例如：int -> double，int -> long, short -> int
+
+  <img src="img/13.png" />
+
+###### cast
+
+* explicitly casts
+
+  ```java
+  // casts (converts) 一个double数值到一个临时的int
+  square((int) doubleValue)
+  ```
+
+###### shadowing
+
+**shadowing** - If a local variable or parameter in a method has the same name as a field of the class, the field is hidden until the block terminates execution.
+
+*Warning*: It will be a compilation error if multiple local variables have the same name in the same method.
+
+###### Method Overloading
+
+Methods of the same name can be declared in the same class, as long as they have different sets of parameters. 
+
+Determined by the number, types and order of the parameters.
+
+When an overloaded method is called, the compiler selects the appropriate method by examining the following in the call:
+
+* Number
+* Types
+* Order of the arguments 
+
+例：Math methods abs, min and max are overloaded with **FOUR (4)** versions each:
+
+​	1.One with two double parameters
+
+​	2.One with two float parameters
+
+​	3.One with two int parameters
+
+​	4.One with two long parameters
+
+```java
+//MethodOverload.java
+// Overloaded method declarations.
+
+public class MethodOverload {
+    // test overloaded square methods
+    public static void main(String[] args) {
+        System.out.printf("Square of integer 7 is %d%n", square(7));
+        System.out.printf("Square of double 7.5 is %f%n", square(7.5));
+    }
+
+    // square method with int argument
+    public static int square(int intValue) {
+        System.out.printf("%nCalled square with int argument: %d%n", intValue);
+        return intValue * intValue;
+    }
+
+    // square method with double argument
+    public static double square(double doubleValue) {
+        System.out.printf("%nCalled square with double argument: %f%n", doubleValue);
+        return doubleValue * doubleValue;
+    }
+}
+
+```
+
+By default, floating-point values are displayed with six digits of precision if the precision is not specified in the format specifier.
+
+The compiler distinguishes overloaded methods by their **signatures**.
+
+A combination of the method’s name and the number, types and order of its parameters, but not its return type.
+
+Internally, the compiler determine whether the methods in a class are unique in that class by looking at the following:
+
+* Using longer method names that include the original method name
+* The types of each parameter
+* The exact order of the parameters to determine
+
+Method calls cannot be distinguished only by return type.
+
+Overloaded methods can have different return types if the methods have different parameter lists. 
+
+Also, overloaded methods need not have the same number of parameters.
+
+
+
+#### Case Study: Secure Random-Number
+
+develop a game-playing program with multiple methods. 
+
+The element of chance can be introduced in a program via an object of class **Secure-Random** (package java.security). 
+
+Such objects can produce random boolean, byte, float, double, int, long and Gaussian values. 
+
+**Secure-Random** objects produce nondeterministic random numbers that cannot be predicted.
+
+With the Secure-Random object, we declare it in order for us to use it in the game. 
