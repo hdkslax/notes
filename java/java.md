@@ -1471,7 +1471,7 @@ converting an argument’s value to the type that the method expects to receive 
 System.out.println(Math.sqrt(4)); // 输出2.0
 ```
 
-此方法可能导致编译错误 (compilation error)
+此方法可能导致**编译错误 (compilation error)**
 
 必须遵守以下规则：
 
@@ -1541,7 +1541,6 @@ public class MethodOverload {
         return doubleValue * doubleValue;
     }
 }
-
 ```
 
 By default, floating-point values are displayed with six digits of precision if the precision is not specified in the format specifier.
@@ -1575,3 +1574,249 @@ Such objects can produce random boolean, byte, float, double, int, long and Gaus
 **Secure-Random** objects produce nondeterministic random numbers that cannot be predicted.
 
 With the Secure-Random object, we declare it in order for us to use it in the game. 
+
+```java
+//RandomIntegers.java
+// Shifted and scaled random integers.
+import java.security.SecureRandom; // program uses class SecureRandom
+
+public class RandomIntegers {
+    public static void main(String[] args) {
+        // randomNumbers object will produce secure random numbers
+        SecureRandom randomNumbers = new SecureRandom();
+        // loop 20 times
+        for (int counter = 1; counter <= 20; counter++) {
+            //pick random integer from 1 to 6
+            int face = 1 + randomNumbers.nextInt(6);
+                System.out.printf("%d  ", face); // display generated value
+                    // if counter is divisible by 5, start a new line of output
+            if (counter % 5 == 0) {
+                System.out.println();
+            }
+        }
+    }
+}
+
+```
+
+
+
+### Arrays
+
+An **array** is a group of variables (called elements or components) containing values that all have the same type.
+
+Arrays are objects, so they’re considered reference types. 
+
+Why reference because an array is actually a reference to an array object in memory. 
+
+The elements of an array can be either primitive types or reference types (We will cover in later slides). 
+
+To refer to a particular element in an array, we specify the name of the reference to the array and the position number of the element in the array. 
+
+The position number of the element is called the element’s **index** or **subscript**.
+
+
+
+###### Logical Array Representation
+
+**声明数组变量**
+
+首先必须声明数组变量，才能在程序中使用数组。下面是声明数组变量的语法：
+
+```java
+dataType[] arrayRefVar;   // 首选的方法 
+dataType arrayRefVar[];  // 效果相同，但不是首选方法
+
+double[] myList;         // 首选的方法
+double myList[];         //  效果相同，但不是首选方法
+```
+
+**创建数组**
+
+```java
+dataType[] arrayRefVar = new dataType[arraySize]
+dataType[] arrayRefVar = {value0, value1, ..., valuek};
+```
+
+A program refers to any one of these elements with an array-access expression that includes the **name of the array**. 
+
+Followed by the index of the particular element in **square brackets ([])**.
+
+Every array object knows its own length and stores it in a length instance variable. 
+
+* `arr.length`
+
+  * 此处需要注意：
+
+    * length一般用来求数组的元素个数。
+
+    * length()方法用来求字符串的长度。
+
+    * size一般用来求list中元素的个数
+
+      ```java
+      class Array
+      {
+          public static void main(String [] args)
+          {
+              String array[]={"First","Second","Third"};
+              String a = "HelloWorld";
+              List<String>list=new ArrayList<String>();
+              list.add(a);
+              System.out.println("数组array的长度为"+array.length);
+              System.out.println("字符串a的长度为"+a.length());
+              System.out.println("list中元素个数为"+list.size());
+      
+      
+          }
+      }
+      ```
+
+      
+
+```java
+public class TestArray {
+   public static void main(String[] args) {
+      // 数组大小
+      int size = 10;
+      // 定义数组
+      double[] myList = new double[size];
+      myList[0] = 5.6;
+      myList[1] = 4.5;
+      myList[2] = 3.3;
+      myList[3] = 13.2;
+      myList[4] = 4.0;
+      myList[5] = 34.33;
+      myList[6] = 34.0;
+      myList[7] = 45.45;
+      myList[8] = 99.993;
+      myList[9] = 11123;
+      // 计算所有元素的总和
+      double total = 0;
+      for (int i = 0; i < size; i++) {
+         total += myList[i];
+      }
+      System.out.println("总和为： " + total);
+   }
+}
+
+// 总和为： 11367.373
+```
+
+###### Array Initializer
+
+```java
+//InitArray.java
+// Initializing the elements of an array with an array initializer.
+public class InitArray {
+    public static void main(String[] args) {
+        // initializer list specifies the initial value for each element
+        int[] array = {32, 27, 64, 18, 95, 14, 90, 70, 60, 37};
+        System.out.printf("%s%8s%n", "Index", "Value"); // column headings
+        // output each array element's value
+        for (int counter = 0; counter < array.length; counter++) {
+            System.out.printf("%5d%8d%n", counter, array[counter]);
+        }
+    }
+}
+
+```
+
+###### Random in array
+
+```java
+//RollDieArray.java
+// Die-rolling program using arrays instead of switch.
+import java.security.SecureRandom;
+public class RollDieArray {
+    public static void main(String[] args) {
+        SecureRandom randomNumbers = new SecureRandom();
+        int[] frequency = new int[7]; // array of frequency counters
+        // roll die 60,000,000 times; use die value as frequency index
+        for (int roll = 1; roll <= 60_000_000; roll++) {
+            ++frequency[1 + randomNumbers.nextInt(6)];
+        }
+         System.out.printf("%s%10s%n", "Face", "Frequency");
+        // output each array element's value
+        for (int face = 1; face < frequency.length; face++) {
+            System.out.printf("%4d%10d%n", face, frequency[face]);
+        }
+    }
+}
+```
+
+###### Enhanced for Statement
+
+```java
+for (parameter : arrayName) {
+       statement
+}
+
+// equivalent to 
+
+for (int counter = 0; counter < array.length; counter++) {
+    total += array[counter];
+}
+```
+
+例：
+
+```java
+//EnhancedForTest.java
+// Using the enhanced for statement to total integers in an array.
+public class EnhancedForTest {
+    public static void main(String[] args) {
+        int[] array = {87, 68, 94, 100, 83, 78, 85, 91, 76, 87};
+        int total = 0;
+        // add each element's value to total
+        for (int number : array) {
+            total += number;
+        }
+        System.out.printf("Total of array elements: %d%n", total);
+    }
+}
+
+```
+
+###### Passing Arrays to Methods
+
+Let’s try out an example on the difference between **passing an entire array** and **passing a primitive-type array element** to a method. 
+
+```java
+//PassArray.java
+// Passing arrays and individual array elements to methods.
+public class PassArray {
+    // main creates array and calls modifyArray and modifyElement
+    public static void main(String[] args) {
+        int[] array = {1, 2, 3, 4, 5};
+        System.out.printf(
+            "Effects of passing reference to entire array:%n" + "The values of the original array are:%n");
+        // output original array elements
+        for (int value : array) {
+            System.out.printf(" %d", value);
+        }
+        modifyArray(array); // pass array reference
+        System.out.printf("%n%nThe values of the modified array are:%n");
+        // output modified array elements
+        for (int value : array) {
+            System.out.printf(" %d", value);
+        }
+        System.out.printf(
+            "%n%nEffects of passing array element value:%n" + "array[3] before modifyElement: %d%n", array[3]);
+        modifyElement(array[3]); // attempt to modify array[3]
+        System.out.printf("array[3] after modifyElement: %d%n", array[3]);
+    }
+    // multiply each element of an array by 2
+    public static void modifyArray(int[] array2) {
+        for (int counter = 0; counter < array2.length; counter++) {
+            array2[counter] *= 2;
+        }
+    }
+    // multiply argument by 2
+    public static void modifyElement(int element) {
+        element *= 2;
+        System.out.printf("Value of element in modifyElement: %d%n", element);
+    }
+}
+```
+
